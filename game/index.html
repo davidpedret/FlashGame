@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PillWars - The Crypto Arena</title>
+    <title>PillWars</title>
     
     <link rel="icon" href="../img/web.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -32,7 +32,7 @@
             transition: background-color 0.5s ease;
         }
 
-        /* --- UI DESKTOP & SHARED --- */
+        /* --- UI COMÚN --- */
         .sound-btn {
             position: absolute; top: 20px;
             width: 40px; height: 40px; z-index: 100;
@@ -48,7 +48,7 @@
         #exitGameBtn { right: 120px; border-color: #522; color: #f55; display: none; }
         #exitGameBtn:hover { background: rgba(255, 50, 50, 0.2); border-color: #f00; color: #fff; }
 
-        /* Botón Global Fullscreen (PC Hidden) */
+        /* Botón Global Fullscreen (Solo visible cuando se active por JS/CSS móvil) */
         #globalFullscreenBtn {
             position: absolute; top: 10px; left: 10px; z-index: 200;
             background: rgba(0,0,0,0.6); border: 1px solid #333; color: white;
@@ -99,7 +99,7 @@
         .buff-icon-img { width: 48px; height: 48px; object-fit: contain; filter: drop-shadow(0 0 6px rgba(255,255,255,0.4)); background: rgba(255,255,255,0.08); border-radius: 6px; padding: 3px; border: 1px solid #444; }
         .buff-time { color: var(--primary); font-family: 'Russo One'; font-size: 18px; text-shadow: 0 0 5px rgba(0,255,136,0.5); }
 
-        /* --- MODE SCREEN --- */
+        /* --- MODE SCREEN (PC) --- */
         #modeScreen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 50; display: flex; overflow: hidden; background: #000; transition: opacity 0.5s; }
         .mode-panel { position: absolute; top: 0; bottom: 0; width: 100%; transition: clip-path 1.2s cubic-bezier(0.4, 0, 0.2, 1), filter 0.85s; cursor: pointer; display: flex; flex-direction: column; justify-content: center; padding: 0 10%; box-sizing: border-box; }
         
@@ -118,6 +118,10 @@
             #modeScreen.hover-arcade .mode-classic { clip-path: polygon(80% 0, 100% 0, 100% 100%, 70% 100%); filter: brightness(0.5); }
             #modeScreen.hover-classic .mode-arcade { clip-path: polygon(0 0, 30% 0, 20% 100%, 0 100%); filter: brightness(0.5); }
             #modeScreen.hover-classic .mode-classic { clip-path: polygon(30% 0, 100% 0, 100% 100%, 20% 100%); filter: brightness(1.2); }
+            #modeScreen.hover-arcade #contentArcade { left: 50%; transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+            #modeScreen.hover-arcade #contentClassic { left: 85%; transform: translate(-50%, -50%) scale(0.8) translateX(30px); opacity: 0.7; }
+            #modeScreen.hover-classic #contentArcade { left: 15%; transform: translate(-50%, -50%) scale(0.8) translateX(-30px); opacity: 0.7; }
+            #modeScreen.hover-classic #contentClassic { left: 50%; transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
         }
         
         .diagonal-divider { position: absolute; top: -10%; width: 6px; height: 120%; background: #fff; z-index: 10; box-shadow: 0 0 40px #fff, 0 0 10px #fff; pointer-events: none; transition: left 1.2s cubic-bezier(0.4, 0, 0.2, 1); transform: rotate(10deg); left: 60%; }
@@ -127,13 +131,6 @@
         .mode-content { position: absolute; top: 50%; transform: translateY(-50%); transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1); max-width: 500px; opacity: 0.9; pointer-events: none; }
         #contentArcade { text-align: left; left: 32.5%; transform: translate(-50%, -50%) scale(1.1); }
         #contentClassic { text-align: right; left: 82.5%; transform: translate(-50%, -50%) scale(0.8); opacity: 0.7; }
-        
-        @media (min-width: 921px) {
-            #modeScreen.hover-arcade #contentArcade { left: 50%; transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
-            #modeScreen.hover-arcade #contentClassic { left: 85%; transform: translate(-50%, -50%) scale(0.8) translateX(30px); opacity: 0.7; }
-            #modeScreen.hover-classic #contentArcade { left: 15%; transform: translate(-50%, -50%) scale(0.8) translateX(-30px); opacity: 0.7; }
-            #modeScreen.hover-classic #contentClassic { left: 50%; transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
-        }
         
         .mode-title { font-family: 'Russo One'; font-size: 70px; text-transform: uppercase; margin-bottom: 10px; letter-spacing: 2px; text-shadow: 0 0 30px rgba(0,0,0,0.9); transition: all 0.4s; }
         .mode-desc { font-size: 14px; color: #fff; margin-bottom: 25px; font-weight: 500; line-height: 1.6; text-shadow: 0 2px 4px #000; background: rgba(0,0,0,0.6); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); }
@@ -145,7 +142,7 @@
         .mode-panel.expanded { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%) !important; z-index: 40; filter:brightness(1) !important; width:100% !important; height:100% !important; top:0 !important; left:0 !important; }
         .mode-panel.hidden { opacity: 0; pointer-events: none; }
 
-        /* --- LOGIN OVERLAY --- */
+        /* --- LOGIN OVERLAY (PC STRUCTURE) --- */
         #loginOverlay, #resultOverlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 60; }
         #loginOverlay.bg-classic { background-image: linear-gradient(rgba(0, 255, 136, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 255, 136, 0.05) 1px, transparent 1px), linear-gradient(135deg, var(--classic-bg-1) 0%, #000 100%); background-size: 50px 50px, 50px 50px, 100% 100%; }
         #loginOverlay.bg-arcade { background-image: linear-gradient(rgba(204, 255, 0, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(204, 255, 0, 0.05) 1px, transparent 1px), linear-gradient(135deg, #000 0%, var(--arcade-bg-1) 100%); background-size: 50px 50px, 50px 50px, 100% 100%; }
@@ -209,8 +206,16 @@
         }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); box-shadow: 0 0 20px rgba(255,42,42,0.6); } 100% { transform: scale(1); } }
 
-        /* MOBILE ARROWS (PC HIDDEN) */
-        .mobile-nav-arrow { display: none; }
+        /* --- MOBILE ARROWS (PC HIDDEN) --- */
+        .mobile-nav-arrow {
+            display: none; position: absolute; top: 50%; transform: translateY(-50%);
+            width: 50px; height: 80px; background: rgba(255,255,255,0.15); border: 2px solid rgba(255,255,255,0.3);
+            justify-content: center; align-items: center; color: var(--primary); font-size: 32px;
+            cursor: pointer; z-index: 200; backdrop-filter: blur(5px);
+        }
+        .nav-prev { left: 0; border-radius: 0 12px 12px 0; border-left: none; }
+        .nav-next { right: 0; border-radius: 12px 0 0 12px; border-right: none; }
+        .mobile-nav-arrow:active { background: var(--primary); color: #000; }
 
         /* --- MOBILE OPTIMIZATIONS (<= 920px) --- */
         @media (max-width: 920px) {
@@ -240,68 +245,64 @@
             /* 2. LOGIN BOX: Simplified Mobile View */
             .login-box {
                 width: 100vw; height: 100vh; max-width: none; max-height: none;
-                padding: 10px 40px; /* Space for arrows */
+                padding: 10px 55px; /* Space for arrows */
                 background: #080808; border: none; border-radius: 0;
                 display: flex; flex-direction: column; justify-content: center;
                 overflow: hidden;
             }
             
-            /* Hide PC header stuff inside login box to save space if needed, or scale down */
-            .login-box h1 { font-size: 20px; margin-bottom: 2px; }
-            #selectedModeTitle { font-size: 14px; margin-bottom: 10px; }
+            /* HIDE DESKTOP ONLY ELEMENTS */
+            .desktop-only { display: none !important; }
 
             .login-content-wrapper {
-                flex: 1; display: flex; flex-direction: row; /* We use JS to toggle */
-                width: 100%; overflow: hidden;
+                flex: 1; display: block; /* No Flex here, we toggle visibility */
+                width: 100%; overflow: visible; padding: 0; margin-top: 5px;
             }
 
-            /* HIDE ADVANCED STUFF ON MOBILE */
-            .section-title.hide-mobile,
-            .quality-buttons,
-            .style-type-selector,
-            .theme-selector-container,
-            details.advanced-settings,
-            .btn-spectate, 
-            .ultra-btn { 
-                display: none !important; 
-            }
-
-            /* Left Panel (Inputs) */
+            /* Left Panel (Inputs) - Centered and Big */
             .login-left {
-                width: 100%; min-width: 0;
-                display: flex; flex-direction: column; justify-content: center;
-                /* If inactive, hide via JS class, but default styles here */
+                width: 100%; height: 100%;
+                display: flex; flex-direction: column; justify-content: center; align-items: center;
             }
 
-            /* Right Panel (Guide) */
+            /* Right Panel (Guide) - Centered */
             .login-right {
-                width: 100%; min-width: 0; border: none; padding: 0; background: transparent;
-                display: flex; flex-direction: column; justify-content: center;
+                width: 100%; height: 100%;
+                border: none; padding: 0; background: transparent;
+                display: none; /* Hidden by default */
+                flex-direction: column; justify-content: center;
             }
 
-            /* MOBILE NAVIGATION ARROWS */
-            .mobile-nav-arrow {
-                display: flex; position: absolute; top: 50%; transform: translateY(-50%);
-                width: 40px; height: 60px; background: rgba(255,255,255,0.1); border: 1px solid #444;
-                justify-content: center; align-items: center; color: var(--primary); font-size: 24px;
-                cursor: pointer; z-index: 100;
-            }
-            .nav-prev { left: 0; border-radius: 0 10px 10px 0; }
-            .nav-next { right: 0; border-radius: 10px 0 0 10px; }
-            .mobile-nav-arrow:active { background: var(--primary); color: #000; }
+            /* SHOW ARROWS */
+            .mobile-nav-arrow { display: flex; }
 
-            /* Element sizing overrides */
-            .section-title { font-size: 10px; margin: 5px 0; }
-            .srv-btn { padding: 8px 0; font-size: 12px; }
-            input[type="text"] { padding: 10px; font-size: 14px; margin-bottom: 10px; }
-            .btn-play { padding: 15px; font-size: 22px; margin-top: 10px; }
+            /* Element sizing overrides for touch */
+            .section-title { font-size: 12px; margin: 10px 0 5px; text-align: center; width: 100%; }
+            .server-selector { width: 100%; justify-content: center; gap: 10px; }
+            .srv-btn { padding: 12px 0; font-size: 14px; flex: 1; }
+            
+            /* Colors */
+            .color-pickers { width: 100%; justify-content: center; background: transparent; border: none; padding: 0; margin-bottom: 20px; }
+            .cp-group { align-items: center; }
+            input[type="color"] { width: 60px; height: 40px; border: 2px solid #333; border-radius: 6px; }
+            
+            input[type="text"] { 
+                padding: 15px; font-size: 16px; margin-bottom: 20px; 
+                width: 80%; text-align: center;
+            }
+            
+            .btn-play { 
+                padding: 20px; font-size: 24px; margin-top: 10px; width: 90%;
+                background: var(--primary); color: #000; box-shadow: 0 0 20px rgba(0,255,136,0.3);
+            }
+            .btn-reset { margin-top: 15px; font-size: 12px; padding: 10px; }
             
             /* Guide adjustments */
-            .arcade-objective { font-size: 10px; padding: 5px; margin-bottom: 5px; }
-            .grid-skill-icon { width: 40px; height: 40px; }
-            .card-video-box { height: 100px !important; min-height: 0; }
-            #cardSkillDesc { height: 40px; font-size: 10px; line-height: 1.1; }
-            .split-video { height: 100px; }
+            .arcade-objective { font-size: 11px; padding: 10px; margin-bottom: 10px; }
+            .grid-skill-icon { width: 45px; height: 45px; }
+            .card-video-box { height: 120px !important; min-height: 0; }
+            #cardSkillDesc { height: 50px; font-size: 11px; line-height: 1.2; }
+            .split-video { height: 140px; }
         }
 
         .skills-grid-title { font-family: 'Russo One'; font-size: 12px; color: #666; margin-bottom: 10px; letter-spacing: 1px; }
@@ -633,8 +634,8 @@
             </div>
             
             <!-- MOBILE TAB HEADER (Solo visible en móvil) -->
-            <div class="mobile-nav-arrow nav-prev" onclick="toggleMobileTab('play')">🎮</div>
-            <div class="mobile-nav-arrow nav-next" onclick="toggleMobileTab('guide')">📖</div>
+            <div class="mobile-nav-arrow nav-prev" onclick="toggleMobileTab('play')">❮</div>
+            <div class="mobile-nav-arrow nav-next" onclick="toggleMobileTab('guide')">❯</div>
 
             <h1>PillWars</h1>
             <h2 id="selectedModeTitle">MODE SELECTED</h2>
@@ -653,7 +654,7 @@
                     <button class="btn-reset" onclick="forceResetRoom()">⚠ RESET CURRENT ROOM ⚠</button>
 
                     <div class="section-title">2. Character</div>
-                    <div class="style-type-selector" style="display:none;">
+                    <div class="style-type-selector desktop-only" style="display:none;">
                         <label><input type="radio" name="styleMode" value="color" checked onclick="toggleStyleUI()"> Colors</label>
                         <label><input type="radio" name="styleMode" value="skin" onclick="toggleStyleUI()"> Skin URL</label>
                     </div>
@@ -666,14 +667,14 @@
                     <div class="section-title">3. Nickname</div>
                     <input type="text" id="playerNameInput" placeholder="Enter Nickname..." maxlength="12">
                     
-                    <div class="quality-buttons">
+                    <div class="quality-buttons desktop-only">
                         <div class="section-title" style="margin-top:15px;">Graphics Quality</div>
                         <button class="q-btn" id="qHigh" onclick="setQuality('high')">HIGH</button>
                         <button class="q-btn selected" id="qNormal" onclick="setQuality('normal')">NORMAL</button>
                         <button class="q-btn" id="qLow" onclick="setQuality('low')">LOW</button>
                     </div>
 
-                    <div class="theme-selector-container">
+                    <div class="theme-selector-container desktop-only">
                         <div class="section-title" style="margin-top:15px;">Map Theme</div>
                         <div style="display:flex; gap:15px; margin-bottom:5px;">
                             <label style="color:#aaa; font-size:11px; font-weight:bold; display:flex; align-items:center; gap:5px; cursor:pointer;"><input type="radio" name="themeMode" value="dark" checked onclick="setTheme('dark')"> Dark</label>
@@ -682,7 +683,7 @@
                         </div>
                     </div>
 
-                    <details class="advanced-settings">
+                    <details class="advanced-settings desktop-only">
                         <summary>⚙️ ADVANCED SETTINGS</summary>
                         <div class="options-content">
                             <div id="settingsLock" style="padding:20px 10px; text-align:center;">
@@ -724,8 +725,8 @@
                     </details>
 
                     <button class="btn-play" id="btnEnterGame" onclick="startGame()">ENTER ARENA</button>
-                    <button class="btn-spectate" onclick="startSpectatorMode()">SPECTATE</button>
-                    <button id="qUltra" class="ultra-btn" onclick="setQuality('ultra')">⚡ ULTRA LOW (FASTEST) ⚡</button>
+                    <button class="btn-spectate desktop-only" onclick="startSpectatorMode()">SPECTATE</button>
+                    <button id="qUltra" class="ultra-btn desktop-only" onclick="setQuality('ultra')">⚡ ULTRA LOW (FASTEST) ⚡</button>
                 </div>
 
                 <div class="login-right" id="arcadeGuidePanel" style="display:none;">

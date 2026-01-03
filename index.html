@@ -349,7 +349,8 @@
     <nav class="navbar" id="main-navbar">
         <div class="nav-left">
             <div class="brand-container"><div class="logo-pill"></div><span class="brand-name">PILLWARS</span></div>
-            <button class="btn-play" onclick="window.location.href='game.html'">PLAY NOW</button>
+            <!-- CAMBIO 1: REDIRECCIÓN A CARPETA GAME/ -->
+            <button class="btn-play" onclick="window.location.href='game/'">PLAY NOW</button>
             <div style="display: flex; gap: 30px; margin-left: 20px;">
                 <a href="#hero" class="nav-link">GAME</a>
                 <a href="#quest" class="nav-link">QUEST</a>
@@ -394,7 +395,6 @@
             <div class="trailer-box"><div style="width: 80px; height: 80px; background: rgba(255,255,255,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.2);"><div style="width: 0; height: 0; border-left: 20px solid white; border-top: 12px solid transparent; border-bottom: 12px solid transparent; margin-left: 5px;"></div></div></div>
             <div class="side-widget">
                 <div class="widget-row"><div class="widget-title">MARKET CAP</div><div class="widget-val" id="widget-mcap">Loading...</div></div>
-                <!-- AQUÍ ES DONDE SE INYECTA EL VOLUMEN -->
                 <div class="widget-row"><div class="widget-title">VOLUME</div><div class="widget-val" id="widget-vol">Loading...</div></div>
             </div>
         </div>
@@ -489,7 +489,6 @@
         <div class="skills-section reveal">
             <h2 style="font-family:'Russo One'; font-size: 40px; text-transform: uppercase;">THE SKILL ARSENAL</h2>
             
-            
             <div class="skills-grid" id="skills-grid-container">
                 <div class="skill-card" onmouseenter="App.UI.showSkill(event, 'shoot')" onmouseleave="App.UI.hideSkill()">
                     <img src="img/shoot.png" class="skill-icon"><div class="skill-name">SHOT</div>
@@ -519,15 +518,12 @@
             
             <div class="intro-text reveal" style="margin-top: 100px; text-align: center;">
                 <h2 class="holo-text" style="font-size: 42px;">DOMINATE THE LOBBY</h2>
-                
-                <!-- VIDEO SIN POSTER DE IMAGEN, USA PRIMER FRAME -->
                 <div class="full-width-img">
                     <video muted loop playsinline preload="metadata">
                         <source src="video/Gameplay.mp4" type="video/mp4">
                         Your browser does not support the video tag.
                     </video>
                 </div>
-
             </div>
         </div>
     </div>
@@ -594,7 +590,7 @@
             balanceDisplay: document.getElementById('user-balance-display'),
             ticker: document.querySelector('.ticker'),
             widgetMcap: document.getElementById('widget-mcap'),
-            widgetVol: document.getElementById('widget-vol'), // <--- ARREGLADO: Faltaba esta línea
+            widgetVol: document.getElementById('widget-vol'), 
             priceBtn: document.getElementById('price-btn'),
             caText: document.getElementById("ca-text"),
             copyFeedback: document.getElementById("copy-feedback"),
@@ -625,7 +621,7 @@
                 init: () => {
                     App.UI.setupCursor();
                     App.UI.setupScroll();
-                    App.UI.setupVideoHover(); // Inicializar interacción de videos
+                    App.UI.setupVideoHover(); 
                     window.onclick = (e) => { if (e.target == DOM.walletModal) App.Wallet.closeModal(); };
                 },
                 setupCursor: () => {
@@ -634,17 +630,13 @@
                         DOM.cursor.style.top = e.clientY + 'px';
                         
                         const target = e.target;
-                        
-                        // LÓGICA DE VISIBILIDAD DE CURSORES
                         const isNavbar = target.closest('.navbar');
                         const isFooter = target.closest('footer');
                         const isModal = target.closest('.modal-overlay');
                         
                         if (isNavbar || isFooter || isModal) {
-                            // En zonas seguras: Ocultamos píldora
                             DOM.cursor.style.opacity = '0'; 
                         } else {
-                            // En el resto del juego: Mostramos píldora
                             DOM.cursor.style.opacity = '1'; 
                         }
                     });
@@ -652,6 +644,18 @@
                     document.addEventListener('mouseup', () => DOM.cursor.classList.remove('clicking'));
                 },
                 setupScroll: () => {
+                    // CAMBIO 2: SCROLL SUAVE SIN MODIFICAR URL
+                    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                        anchor.addEventListener('click', function (e) {
+                            e.preventDefault();
+                            const targetId = this.getAttribute('href');
+                            const targetSection = document.querySelector(targetId);
+                            if (targetSection) {
+                                targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            }
+                        });
+                    });
+
                     const reveal = () => {
                         document.querySelectorAll(".reveal").forEach(el => {
                             if (el.getBoundingClientRect().top < window.innerHeight - 100) el.classList.add("active");
@@ -660,14 +664,11 @@
                     window.addEventListener("scroll", reveal); reveal();
                 },
                 setupVideoHover: () => {
-                    // Seleccionamos videos de las tarjetas Y el video de Gameplay grande
                     const videos = document.querySelectorAll('.video-card video, .full-width-img video');
                     videos.forEach(video => {
                         video.pause(); 
-                        video.currentTime = 0; // Obligamos a ir al inicio (primer frame)
-                        
+                        video.currentTime = 0; 
                         const container = video.parentElement;
-                        
                         container.addEventListener('mouseenter', () => {
                             video.play().catch(e => console.log("User gesture needed for playback:", e));
                         });
@@ -683,7 +684,6 @@
                     });
                 },
                 
-                // --- TOOLTIP LOGIC ---
                 showSkill: (e, key) => {
                     const data = SKILL_DB[key];
                     if (!data) return;
@@ -776,7 +776,7 @@
                         const mcap = p.fdv ? parseFloat(p.fdv).toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }) : "N/A";
 
                         if(DOM.widgetMcap) DOM.widgetMcap.innerHTML = mcap;
-                        if(DOM.widgetVol) DOM.widgetVol.innerHTML = vol; // <--- ARREGLADO: Se asigna el valor al HTML
+                        if(DOM.widgetVol) DOM.widgetVol.innerHTML = vol; 
                         if(DOM.priceBtn) DOM.priceBtn.innerHTML = `<span>$PILL</span> &nbsp; $${price} ▾`;
 
                         const col = chg >= 0 ? '#00ff88' : '#ff4747';
@@ -799,4 +799,5 @@
         setInterval(App.Market.updateTicker, 30000);
     </script>
 </body>
+</html>
 </html>

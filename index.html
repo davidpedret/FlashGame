@@ -307,7 +307,7 @@
             .navbar { 
                 flex-direction: column; 
                 padding: 10px 20px; 
-                gap: 10px; 
+                gap: 5px; /* Reducido para juntar más los elementos */
                 position: fixed; 
             }
             
@@ -315,7 +315,7 @@
                 flex-direction: column; 
                 align-items: center; 
                 width: 100%; 
-                gap: 10px;
+                gap: 5px;
             }
             
             /* --- LOGO Y TITULO OCULTOS EN MÓVIL --- */
@@ -327,7 +327,7 @@
                 margin: 0;
                 overflow-x: auto; 
                 white-space: nowrap;
-                padding: 5px 0 10px 0;
+                padding: 5px 0; /* Padding vertical reducido */
                 gap: 15px;
                 justify-content: flex-start; /* Alineado a la izquierda */
                 scrollbar-width: none; /* Firefox */
@@ -353,8 +353,8 @@
             .dropbtn { font-size: 12px; }
             .btn-connect { padding: 6px 12px; font-size: 10px; }
 
-            /* Ticker ajustado (más arriba porque ya no está el logo) */
-            .ticker-wrap { position: fixed; top: 110px; z-index: 900; } 
+            /* Ticker ajustado visualmente por defecto (el script lo perfeccionará) */
+            .ticker-wrap { position: fixed; top: 90px; z-index: 900; } 
             
             /* Ajuste de Hero */
             .hero-video-wrapper { padding-top: 0; height: 100vh; }
@@ -363,7 +363,7 @@
             .big-title { font-size: 48px; }
             .big-subtitle { font-size: 16px; letter-spacing: 4px; }
             
-            .main-layout { flex-direction: column; margin-top: 100px; } /* Menos margen top */
+            .main-layout { flex-direction: column; margin-top: 80px; } /* Menos margen top */
             .trailer-box { aspect-ratio: 16/9; width: 100%; }
             .side-widget { width: 100%; }
             
@@ -678,10 +678,23 @@
                         DOM.cursor.style.display = 'block';
                     }
 
-                    // Ajuste dinamico del ticker en movil
-                    if(App.isTouch && window.innerWidth <= 768) {
-                        // Recalcular posicion inicial si es necesario
-                    }
+                    // AUTO ADJUST TICKER POSITION
+                    const adjustTicker = () => {
+                        if (window.innerWidth <= 768) {
+                            // En móvil, la altura depende del contenido. Medimos la navbar y aplicamos al ticker.
+                            const h = DOM.navbar.offsetHeight;
+                            DOM.tickerWrap.style.top = h + 'px';
+                        } else {
+                            // En PC usamos la variable CSS por defecto
+                            DOM.tickerWrap.style.top = '80px'; 
+                        }
+                    };
+                    
+                    // Ejecutar ajuste al cargar y al redimensionar
+                    adjustTicker();
+                    window.addEventListener('resize', adjustTicker);
+                    // Un pequeño delay por si las fuentes cargan tarde y cambian la altura
+                    setTimeout(adjustTicker, 500);
 
                     App.UI.setupScroll();
                     App.UI.setupVideoHover(); 

@@ -20,10 +20,10 @@
             --text-main: #e0e0e0;
             --gold: #ffcc00;
         }
-        html, body { touch-action: none; overflow: hidden; height: 100%; width: 100%; }
+        html, body { touch-action: none; overflow: hidden; height: 100%; width: 100%; margin: 0; padding: 0; }
         
         body {
-            margin: 0; background-color: var(--bg-color);
+            background-color: var(--bg-color);
             background-image: linear-gradient(var(--grid-line) 1px, transparent 1px),
                               linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
             background-size: 40px 40px; font-family: 'Inter', sans-serif; 
@@ -47,14 +47,6 @@
         #musicToggle { right: 70px; }
         #exitGameBtn { right: 120px; border-color: #522; color: #f55; display: none; }
         #exitGameBtn:hover { background: rgba(255, 50, 50, 0.2); border-color: #f00; color: #fff; }
-
-        /* Botón Global Fullscreen (Visible siempre, estilo Desktop) */
-        #globalFullscreenBtn {
-            position: absolute; top: 20px; left: 20px; z-index: 200;
-            background: rgba(0,0,0,0.6); border: 1px solid #333; color: white;
-            padding: 8px 12px; border-radius: 6px; font-family: 'Russo One'; font-size: 12px;
-            cursor: pointer; display: none; /* Oculto en PC por defecto, se activa con JS/Media */
-        }
 
         .sound-on, .sound-off { display: block; } 
         .sound-btn:not(.muted) .sound-off { display: none !important; }
@@ -188,12 +180,30 @@
 
         @keyframes slideOutLeft { to { opacity: 1; transform: translate(0, -50%); } }
 
+        /* --- FORCE FULLSCREEN OVERLAY (MÓVIL ONLY) --- */
+        #forceFullscreen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 99999;
+            display: none; /* Desktop default: oculto */
+            flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; color: var(--primary); font-family: 'Russo One';
+        }
+        #forceFullscreen h1 { color: white; margin-bottom: 20px; font-size: 24px; text-transform: uppercase; }
+        #forceFullscreen p { color: #aaa; margin-bottom: 30px; font-family: 'Inter'; font-size: 14px; max-width: 80%; line-height: 1.5; }
+        #forceFullscreen button {
+            background: var(--accent); color: white; border: none; padding: 20px 40px;
+            font-size: 20px; font-family: 'Russo One'; margin-top: 20px; border-radius: 8px;
+            cursor: pointer; animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); box-shadow: 0 0 20px rgba(255,42,42,0.6); } 100% { transform: scale(1); } }
+
         /* --- MOBILE OPTIMIZATIONS (LANDSCAPE SPECIFIC) --- */
         /* Asegura que esto NO afecta a Desktop normal, solo a pantallas pequeñas */
         @media (max-width: 920px) {
             
-            /* Mostrar botón de fullscreen global */
-            #globalFullscreenBtn { display: block; }
+            /* FORCE FULLSCREEN LOGIC */
+            #forceFullscreen { display: flex; } /* Por defecto visible en móvil */
+            
             #exitGameBtn { display: none !important; } /* Ocultar el de PC */
 
             /* 1. MODO SELECCIÓN: Partir pantalla en 2 sin diagonales */
@@ -222,18 +232,21 @@
             .mode-sub { font-size: 10px; }
             .mode-desc { display: none; } /* Ocultar texto largo */
 
-            /* 2. LOGIN BOX: Compacto con Scroll */
+            /* 2. LOGIN BOX: Ocupa toda la pantalla, sin márgenes */
             .login-box {
-                width: 96%; height: 96%; max-height: 96%;
-                padding: 10px; 
+                width: 100vw; height: 100vh;
+                max-width: none; max-height: none;
+                margin: 0; border-radius: 0; border: none;
+                padding: 10px; box-sizing: border-box;
                 display: flex; flex-direction: column;
-                overflow: hidden; /* Evitar scroll en el body overlay */
+                background: #050505; /* Fondo solido */
+                overflow: hidden; 
             }
             
             .login-content-wrapper {
                 flex: 1; overflow-y: auto; /* Scroll interno vital */
                 display: flex; flex-direction: row; gap: 15px;
-                padding-bottom: 40px; /* Espacio para el dedo al hacer scroll */
+                padding-bottom: 60px; /* Espacio extra para scroll */
             }
 
             .login-left { 
@@ -248,26 +261,30 @@
 
             /* Reducciones de tamaño */
             .section-title { font-size: 9px; margin: 5px 0 2px; }
-            .srv-btn, .q-btn { padding: 4px 0; font-size: 10px; }
-            input[type="text"] { padding: 6px; font-size: 11px; }
-            .btn-play { padding: 10px; font-size: 16px; margin-top: 15px; }
-            .btn-spectate { padding: 8px; font-size: 12px; margin-top: 5px; }
-            .ultra-btn { font-size: 9px; padding: 5px; }
+            .srv-btn, .q-btn { padding: 6px 0; font-size: 11px; }
+            input[type="text"] { padding: 8px; font-size: 12px; }
             
-            /* Ajuste de opciones avanzadas para que no floten fuera */
+            /* Botón ENTER: Grande y visible */
+            .btn-play { 
+                padding: 15px; font-size: 18px; 
+                margin-top: 20px; 
+                background: var(--primary); color: #000; /* Resaltar */
+            }
+            
+            /* Ajuste de opciones avanzadas */
             .options-content {
                 position: static; transform: none; width: 100%; 
                 opacity: 1; animation: none; margin-top: 10px;
-                background: rgba(0,0,0,0.5);
+                background: rgba(255,255,255,0.05); padding: 10px;
             }
 
             /* Arcade/Classic Guide Panel en Login */
-            .arcade-objective { font-size: 9px; padding: 5px; margin-bottom: 5px; }
-            .grid-skill-icon { width: 35px; height: 35px; }
-            .card-header { font-size: 12px; }
-            .card-video-box { min-height: 80px; height: 100px !important; }
-            #cardSkillDesc { font-size: 9px; height: 40px; line-height: 1.1; }
-            .split-video { height: 100px; }
+            .arcade-objective { font-size: 10px; padding: 5px; margin-bottom: 5px; }
+            .grid-skill-icon { width: 40px; height: 40px; }
+            .card-header { font-size: 14px; }
+            .card-video-box { min-height: 80px; height: 110px !important; }
+            #cardSkillDesc { font-size: 10px; height: 45px; line-height: 1.2; }
+            .split-video { height: 110px; }
         }
 
         .skills-grid-title { font-family: 'Russo One'; font-size: 12px; color: #666; margin-bottom: 10px; letter-spacing: 1px; }
@@ -493,16 +510,6 @@
         .mob-btn:active { background: rgba(255, 255, 255, 0.3); transform: scale(0.95); }
         .mob-big { width: 70px; height: 70px; font-size: 14px; background: rgba(255, 42, 42, 0.3); border-color: rgba(255, 42, 42, 0.6); }
 
-        /* ORIENTATION WARNING */
-        #orientationLock {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; z-index: 9999; flex-direction: column; justify-content: center; align-items: center;
-            color: #fff; font-family: 'Russo One'; text-align: center;
-        }
-        @media screen and (orientation: portrait) and (max-width: 900px) {
-            #orientationLock { display: flex; }
-        }
-
         /* ARCADE MOBILE SLOTS */
         .arcade-mob-grid {
             display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;
@@ -517,18 +524,16 @@
 </head>
 <body>
 
-    <!-- GLOBAL FULLSCREEN BUTTON (PC HIDDEN, MOBILE VISIBLE) -->
-    <div id="globalFullscreenBtn" onclick="toggleFullScreen()">⛶ FULLSCREEN</div>
-
-    <!-- MOBILE CONTROLS (Solo visible en móvil) -->
-    <div id="orientationLock">
-        <svg fill="#fff" width="64px" height="64px" viewBox="0 0 24 24"><path d="M16.48 2.52c3.27 1.55 5.61 4.72 5.97 8.48h1.5C23.44 4.84 18.29 0 12 0l-1 .08v3.02h1c1.61 0 3.09.55 4.48 1.42zM19.48 13c-.36 3.76-2.7 6.93-5.97 8.48l-.03.02 1.49 1.49C16.11 21.55 17.6 21 19.48 13zM0 12c0 6.62 5.38 12 12 12h1v-3.02l-1 .02c-5.17 0-9.41-3.87-9.95-8.8H.05v-.2h2.03C2.59 7.07 6.83 3.2 12 3.2l1-.02V.18H12C5.38.18 0 5.54 0 12zM12 18l4-4-4-4v8z"/></svg>
-        <div style="margin-top:20px;">PLEASE ROTATE DEVICE</div>
+    <!-- FORCE FULLSCREEN OVERLAY (MÓVIL ONLY) -->
+    <div id="forceFullscreen">
+        <h1>MOBILE WARNING</h1>
+        <p>This game requires Fullscreen Mode to function properly on this device.<br>If you exit fullscreen, the game will pause.</p>
+        <button onclick="toggleFullScreen()">ENABLE FULLSCREEN</button>
     </div>
 
+    <!-- MOBILE CONTROLS (Solo visible en móvil) -->
     <div id="mobileControls">
         <div id="joystickZone"><div id="stick"></div></div>
-        
         <div id="mobileActions">
             <!-- Arcade Skills Container (4 slots) -->
             <div id="mobArcadeSlots" class="arcade-mob-grid" style="display:none;">
@@ -537,10 +542,8 @@
                 <div class="mob-btn mob-skill-slot" id="mobSlot3" ontouchstart="activateSkillTouch(3, event)"></div>
                 <div class="mob-btn mob-skill-slot" id="mobSlot4" ontouchstart="activateSkillTouch(4, event)"></div>
             </div>
-
             <!-- Botón Shoot (Solo Classic) -->
             <div id="mobShootBtn" class="mob-btn" style="display:none;" ontouchstart="activateSkillTouch(1, event)">SHOOT</div>
-            
             <!-- Botón Split (Común) -->
             <div class="mob-btn mob-big" ontouchstart="splitPlayerMobile(event)">SPLIT</div>
         </div>
@@ -1528,7 +1531,7 @@
         }, {passive: false}); 
 
         window.addEventListener('touchstart', e => { 
-            if(e.target.closest('.ab-slot, button, #loginOverlay, #resultOverlay, #skillChoiceOverlay, #exitGameBtn, #exitModal, .nav-btn, #mobileControls, #globalFullscreenBtn')) return; 
+            if(e.target.closest('.ab-slot, button, #loginOverlay, #resultOverlay, #skillChoiceOverlay, #exitGameBtn, #exitModal, .nav-btn, #mobileControls, #forceFullscreen')) return; 
             
             // Skill Choice handling on Mobile (Arcade)
             if (isPickingSkill && currentGameMode !== 'classic') {
@@ -1556,7 +1559,54 @@
         window.addEventListener('keyup', e => { if (e.code.startsWith('Digit')) { let id = parseInt(e.code.slice(-1)); if(id === 0) id = 10; if(id >= 1 && id <= 10 && uiSlots[id]) uiSlots[id].classList.remove('active'); } if (['KeyW','KeyA','KeyS','KeyD'].includes(e.code)) keys[e.code.slice(-1).toLowerCase()] = false; });
         
         initMobileControls();
+        initFullscreenLogic();
         loop(); 
+    }
+
+    // --- FORCE FULLSCREEN LOGIC ---
+    function toggleFullScreen() {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().then(() => {
+                // Try to lock orientation to landscape
+                if (screen.orientation && screen.orientation.lock) {
+                    screen.orientation.lock("landscape").catch(err => {
+                        console.log("Orientation lock not supported/allowed");
+                    });
+                }
+            }).catch(err => {
+                console.log("Fullscreen request denied");
+            });
+        }
+    }
+
+    function initFullscreenLogic() {
+        // Detect if mobile
+        const isMobile = window.innerWidth <= 920;
+        const overlay = document.getElementById('forceFullscreen');
+
+        if (!isMobile) {
+            // PC: Hide strict overlay, rely on standard UI
+            if (overlay) overlay.style.display = 'none';
+            return;
+        }
+
+        // Mobile: Strict enforcement
+        const checkFS = () => {
+            if (document.fullscreenElement) {
+                overlay.style.display = 'none';
+                document.body.classList.add('is-fullscreen');
+            } else {
+                overlay.style.display = 'flex';
+                document.body.classList.remove('is-fullscreen');
+            }
+        };
+
+        // Listeners
+        document.addEventListener('fullscreenchange', checkFS);
+        document.addEventListener('webkitfullscreenchange', checkFS); // Safari/Old Chrome
+        
+        // Initial check
+        checkFS();
     }
 
     // --- MOBILE JOYSTICK LOGIC ---
@@ -1641,14 +1691,6 @@
         splitPlayer();
     }
     
-    function toggleFullScreen() {
-        if (!document.fullscreenElement) {
-            document.documentElement.requestFullscreen().catch(err => {});
-        } else {
-            document.exitFullscreen();
-        }
-    }
-
     function dragStart(ev, idx) { if(currentGameMode !== 'arcade' && currentGameMode !== 'skills') return; draggedIdx = idx; ev.dataTransfer.effectAllowed = "move"; }
     function allowDrop(ev) { if(currentGameMode !== 'arcade' && currentGameMode !== 'skills') return; ev.preventDefault(); }
     function drop(ev, dropIdx) { if(currentGameMode !== 'arcade' && currentGameMode !== 'skills') return; ev.preventDefault(); if(draggedIdx === -1 || draggedIdx === dropIdx) return; let temp = playerSkills[draggedIdx]; playerSkills[draggedIdx] = playerSkills[dropIdx]; playerSkills[dropIdx] = temp; updateSkillsUI_Arcade(); draggedIdx = -1; }

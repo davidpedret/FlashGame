@@ -48,6 +48,14 @@
         #exitGameBtn { right: 120px; border-color: #522; color: #f55; display: none; }
         #exitGameBtn:hover { background: rgba(255, 50, 50, 0.2); border-color: #f00; color: #fff; }
 
+        /* Botón Global Fullscreen (PC Hidden) */
+        #globalFullscreenBtn {
+            position: absolute; top: 10px; left: 10px; z-index: 200;
+            background: rgba(0,0,0,0.6); border: 1px solid #333; color: white;
+            padding: 8px 12px; border-radius: 6px; font-family: 'Russo One'; font-size: 12px;
+            cursor: pointer; display: none; 
+        }
+
         .sound-on, .sound-off { display: block; } 
         .sound-btn:not(.muted) .sound-off { display: none !important; }
         .sound-btn:not(.muted) .sound-on { display: block !important; }
@@ -91,7 +99,7 @@
         .buff-icon-img { width: 48px; height: 48px; object-fit: contain; filter: drop-shadow(0 0 6px rgba(255,255,255,0.4)); background: rgba(255,255,255,0.08); border-radius: 6px; padding: 3px; border: 1px solid #444; }
         .buff-time { color: var(--primary); font-family: 'Russo One'; font-size: 18px; text-shadow: 0 0 5px rgba(0,255,136,0.5); }
 
-        /* --- MODE SCREEN (DESKTOP DEFAULT) --- */
+        /* --- MODE SCREEN --- */
         #modeScreen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 50; display: flex; overflow: hidden; background: #000; transition: opacity 0.5s; }
         .mode-panel { position: absolute; top: 0; bottom: 0; width: 100%; transition: clip-path 1.2s cubic-bezier(0.4, 0, 0.2, 1), filter 0.85s; cursor: pointer; display: flex; flex-direction: column; justify-content: center; padding: 0 10%; box-sizing: border-box; }
         
@@ -103,11 +111,14 @@
             background-image: linear-gradient(rgba(0, 255, 136, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 255, 136, 0.05) 1px, transparent 1px), linear-gradient(135deg, #000 0%, var(--classic-bg-1) 100%);
             background-size: 50px 50px, 50px 50px, 100% 100%; clip-path: polygon(65% 0, 100% 0, 100% 100%, 55% 100%); right: 0; z-index: 2; align-items: flex-end; text-align: right;
         }
-        /* HOVER EFFECTS DESKTOP */
-        #modeScreen.hover-arcade .mode-arcade { clip-path: polygon(0 0, 80% 0, 70% 100%, 0 100%); filter: brightness(1.2); }
-        #modeScreen.hover-arcade .mode-classic { clip-path: polygon(80% 0, 100% 0, 100% 100%, 70% 100%); filter: brightness(0.5); }
-        #modeScreen.hover-classic .mode-arcade { clip-path: polygon(0 0, 30% 0, 20% 100%, 0 100%); filter: brightness(0.5); }
-        #modeScreen.hover-classic .mode-classic { clip-path: polygon(30% 0, 100% 0, 100% 100%, 20% 100%); filter: brightness(1.2); }
+        
+        /* HOVER EFFECTS DESKTOP ONLY */
+        @media (min-width: 921px) {
+            #modeScreen.hover-arcade .mode-arcade { clip-path: polygon(0 0, 80% 0, 70% 100%, 0 100%); filter: brightness(1.2); }
+            #modeScreen.hover-arcade .mode-classic { clip-path: polygon(80% 0, 100% 0, 100% 100%, 70% 100%); filter: brightness(0.5); }
+            #modeScreen.hover-classic .mode-arcade { clip-path: polygon(0 0, 30% 0, 20% 100%, 0 100%); filter: brightness(0.5); }
+            #modeScreen.hover-classic .mode-classic { clip-path: polygon(30% 0, 100% 0, 100% 100%, 20% 100%); filter: brightness(1.2); }
+        }
         
         .diagonal-divider { position: absolute; top: -10%; width: 6px; height: 120%; background: #fff; z-index: 10; box-shadow: 0 0 40px #fff, 0 0 10px #fff; pointer-events: none; transition: left 1.2s cubic-bezier(0.4, 0, 0.2, 1); transform: rotate(10deg); left: 60%; }
         #modeScreen.hover-arcade .diagonal-divider { left: 75%; background: #ccff00; box-shadow: 0 0 40px #ccff00; }
@@ -117,11 +128,12 @@
         #contentArcade { text-align: left; left: 32.5%; transform: translate(-50%, -50%) scale(1.1); }
         #contentClassic { text-align: right; left: 82.5%; transform: translate(-50%, -50%) scale(0.8); opacity: 0.7; }
         
-        /* HOVER CONTENT POSITIONS */
-        #modeScreen.hover-arcade #contentArcade { left: 50%; transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
-        #modeScreen.hover-arcade #contentClassic { left: 85%; transform: translate(-50%, -50%) scale(0.8) translateX(30px); opacity: 0.7; }
-        #modeScreen.hover-classic #contentArcade { left: 15%; transform: translate(-50%, -50%) scale(0.8) translateX(-30px); opacity: 0.7; }
-        #modeScreen.hover-classic #contentClassic { left: 50%; transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+        @media (min-width: 921px) {
+            #modeScreen.hover-arcade #contentArcade { left: 50%; transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+            #modeScreen.hover-arcade #contentClassic { left: 85%; transform: translate(-50%, -50%) scale(0.8) translateX(30px); opacity: 0.7; }
+            #modeScreen.hover-classic #contentArcade { left: 15%; transform: translate(-50%, -50%) scale(0.8) translateX(-30px); opacity: 0.7; }
+            #modeScreen.hover-classic #contentClassic { left: 50%; transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+        }
         
         .mode-title { font-family: 'Russo One'; font-size: 70px; text-transform: uppercase; margin-bottom: 10px; letter-spacing: 2px; text-shadow: 0 0 30px rgba(0,0,0,0.9); transition: all 0.4s; }
         .mode-desc { font-size: 14px; color: #fff; margin-bottom: 25px; font-weight: 500; line-height: 1.6; text-shadow: 0 2px 4px #000; background: rgba(0,0,0,0.6); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); }
@@ -197,94 +209,99 @@
         }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); box-shadow: 0 0 20px rgba(255,42,42,0.6); } 100% { transform: scale(1); } }
 
-        /* --- MOBILE OPTIMIZATIONS (LANDSCAPE SPECIFIC) --- */
-        /* Asegura que esto NO afecta a Desktop normal, solo a pantallas pequeñas */
+        /* MOBILE ARROWS (PC HIDDEN) */
+        .mobile-nav-arrow { display: none; }
+
+        /* --- MOBILE OPTIMIZATIONS (<= 920px) --- */
         @media (max-width: 920px) {
             
-            /* FORCE FULLSCREEN LOGIC */
-            #forceFullscreen { display: flex; } /* Por defecto visible en móvil */
-            
-            #exitGameBtn { display: none !important; } /* Ocultar el de PC */
+            /* GLOBAL: Force Fullscreen & Fullscreen Button */
+            #forceFullscreen { display: flex; }
+            #globalFullscreenBtn { display: block; }
+            #exitGameBtn { display: none !important; }
 
-            /* 1. MODO SELECCIÓN: Partir pantalla en 2 sin diagonales */
+            /* 1. SELECTION SCREEN FIX (Half & Half) */
             #modeScreen { flex-direction: row; }
             .diagonal-divider { display: none; }
-            
             .mode-panel {
                 width: 50% !important; height: 100% !important;
-                clip-path: none !important; /* Quitar recortes */
-                top: 0 !important; bottom: 0 !important;
-                padding: 10px !important;
-                display: flex; align-items: center; justify-content: center;
-                text-align: center;
+                clip-path: none !important; top: 0 !important; bottom: 0 !important;
+                padding: 10px !important; text-align: center; justify-content: center; align-items: center;
+                border-bottom: none;
             }
-            .mode-arcade { left: 0; border-right: 2px solid #333; align-items: center; }
-            .mode-classic { right: 0; left: auto; align-items: center; }
-
-            .mode-content {
-                position: relative; left: auto !important; top: auto !important;
-                transform: none !important; opacity: 1 !important; width: 100%;
-                margin: 0;
-            }
-            #contentArcade, #contentClassic { text-align: center; }
-
+            .mode-arcade { left: 0; border-right: 2px solid #333; }
+            .mode-classic { right: 0; left: auto; }
+            .mode-content { width: 100%; position: relative; transform: none; top: auto; left: auto; opacity: 1; text-align: center; }
+            #contentArcade, #contentClassic { text-align: center; left: auto; top: auto; transform: none; }
             .mode-title { font-size: 28px; margin-bottom: 5px; }
             .mode-sub { font-size: 10px; }
-            .mode-desc { display: none; } /* Ocultar texto largo */
+            .mode-desc { display: none; }
 
-            /* 2. LOGIN BOX: Ocupa toda la pantalla, sin márgenes */
+            /* 2. LOGIN BOX: Simplified Mobile View */
             .login-box {
-                width: 100vw; height: 100vh;
-                max-width: none; max-height: none;
-                margin: 0; border-radius: 0; border: none;
-                padding: 10px; box-sizing: border-box;
-                display: flex; flex-direction: column;
-                background: #050505; /* Fondo solido */
-                overflow: hidden; 
+                width: 100vw; height: 100vh; max-width: none; max-height: none;
+                padding: 10px 40px; /* Space for arrows */
+                background: #080808; border: none; border-radius: 0;
+                display: flex; flex-direction: column; justify-content: center;
+                overflow: hidden;
             }
             
+            /* Hide PC header stuff inside login box to save space if needed, or scale down */
+            .login-box h1 { font-size: 20px; margin-bottom: 2px; }
+            #selectedModeTitle { font-size: 14px; margin-bottom: 10px; }
+
             .login-content-wrapper {
-                flex: 1; overflow-y: auto; /* Scroll interno vital */
-                display: flex; flex-direction: row; gap: 15px;
-                padding-bottom: 60px; /* Espacio extra para scroll */
+                flex: 1; display: flex; flex-direction: row; /* We use JS to toggle */
+                width: 100%; overflow: hidden;
             }
 
-            .login-left { 
-                flex: 1; min-width: 0; 
-                display: flex; flex-direction: column; gap: 5px;
+            /* HIDE ADVANCED STUFF ON MOBILE */
+            .section-title.hide-mobile,
+            .quality-buttons,
+            .style-type-selector,
+            .theme-selector-container,
+            details.advanced-settings,
+            .btn-spectate, 
+            .ultra-btn { 
+                display: none !important; 
             }
+
+            /* Left Panel (Inputs) */
+            .login-left {
+                width: 100%; min-width: 0;
+                display: flex; flex-direction: column; justify-content: center;
+                /* If inactive, hide via JS class, but default styles here */
+            }
+
+            /* Right Panel (Guide) */
             .login-right {
-                flex: 1; min-width: 0;
-                border-left: 1px solid #333; padding-left: 10px; margin-top: 0; border-top: none;
-                background: transparent;
+                width: 100%; min-width: 0; border: none; padding: 0; background: transparent;
+                display: flex; flex-direction: column; justify-content: center;
             }
 
-            /* Reducciones de tamaño */
-            .section-title { font-size: 9px; margin: 5px 0 2px; }
-            .srv-btn, .q-btn { padding: 6px 0; font-size: 11px; }
-            input[type="text"] { padding: 8px; font-size: 12px; }
-            
-            /* Botón ENTER: Grande y visible */
-            .btn-play { 
-                padding: 15px; font-size: 18px; 
-                margin-top: 20px; 
-                background: var(--primary); color: #000; /* Resaltar */
+            /* MOBILE NAVIGATION ARROWS */
+            .mobile-nav-arrow {
+                display: flex; position: absolute; top: 50%; transform: translateY(-50%);
+                width: 40px; height: 60px; background: rgba(255,255,255,0.1); border: 1px solid #444;
+                justify-content: center; align-items: center; color: var(--primary); font-size: 24px;
+                cursor: pointer; z-index: 100;
             }
-            
-            /* Ajuste de opciones avanzadas */
-            .options-content {
-                position: static; transform: none; width: 100%; 
-                opacity: 1; animation: none; margin-top: 10px;
-                background: rgba(255,255,255,0.05); padding: 10px;
-            }
+            .nav-prev { left: 0; border-radius: 0 10px 10px 0; }
+            .nav-next { right: 0; border-radius: 10px 0 0 10px; }
+            .mobile-nav-arrow:active { background: var(--primary); color: #000; }
 
-            /* Arcade/Classic Guide Panel en Login */
+            /* Element sizing overrides */
+            .section-title { font-size: 10px; margin: 5px 0; }
+            .srv-btn { padding: 8px 0; font-size: 12px; }
+            input[type="text"] { padding: 10px; font-size: 14px; margin-bottom: 10px; }
+            .btn-play { padding: 15px; font-size: 22px; margin-top: 10px; }
+            
+            /* Guide adjustments */
             .arcade-objective { font-size: 10px; padding: 5px; margin-bottom: 5px; }
             .grid-skill-icon { width: 40px; height: 40px; }
-            .card-header { font-size: 14px; }
-            .card-video-box { min-height: 80px; height: 110px !important; }
-            #cardSkillDesc { font-size: 10px; height: 45px; line-height: 1.2; }
-            .split-video { height: 110px; }
+            .card-video-box { height: 100px !important; min-height: 0; }
+            #cardSkillDesc { height: 40px; font-size: 10px; line-height: 1.1; }
+            .split-video { height: 100px; }
         }
 
         .skills-grid-title { font-family: 'Russo One'; font-size: 12px; color: #666; margin-bottom: 10px; letter-spacing: 1px; }
@@ -524,6 +541,9 @@
 </head>
 <body>
 
+    <!-- GLOBAL FULLSCREEN BUTTON (PC HIDDEN, MOBILE VISIBLE) -->
+    <div id="globalFullscreenBtn" onclick="toggleFullScreen()">⛶ FULLSCREEN</div>
+
     <!-- FORCE FULLSCREEN OVERLAY (MÓVIL ONLY) -->
     <div id="forceFullscreen">
         <h1>MOBILE WARNING</h1>
@@ -611,59 +631,55 @@
             <div class="back-icon" onclick="goBackToModes()">
                 <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
             </div>
+            
+            <!-- MOBILE TAB HEADER (Solo visible en móvil) -->
+            <div class="mobile-nav-arrow nav-prev" onclick="toggleMobileTab('play')">🎮</div>
+            <div class="mobile-nav-arrow nav-next" onclick="toggleMobileTab('guide')">📖</div>
+
             <h1>PillWars</h1>
             <h2 id="selectedModeTitle">MODE SELECTED</h2>
             <div id="gameOverMsg" style="display:none; color:#ff2a2a; font-weight:bold; margin-bottom:10px;">GAME OVER</div>
 
             <div class="login-content-wrapper">
-                <div class="login-left">
-                    <div class="section-title">1. Room Select (Token amount depends on $PILL price)</div>
+                <div class="login-left" id="loginPanelLeft">
+                    <div class="section-title">1. Room Select</div>
                     <div class="server-selector">
                         <button class="srv-btn selected" onclick="selectServer('5$', this)">5$</button>
                         <button class="srv-btn" onclick="selectServer('10$', this)">10$</button>
                         <button class="srv-btn" onclick="selectServer('20$', this)">20$</button>
                         <button class="srv-btn" onclick="selectServer('50$', this)">50$</button>
                     </div>
-                    <!-- FREE ROOM BELOW PAYMENT ROOMS -->
                     <button class="srv-btn" style="width:100%; margin-bottom:5px; border-color:var(--primary); color:var(--primary);" onclick="selectServer('Free', this)">PRACTICE (FREE)</button>
-                    
                     <button class="btn-reset" onclick="forceResetRoom()">⚠ RESET CURRENT ROOM ⚠</button>
 
                     <div class="section-title">2. Character</div>
-                    <!-- RADIO BUTTONS HIDDEN (COLORS ONLY DEFAULT) -->
                     <div class="style-type-selector" style="display:none;">
                         <label><input type="radio" name="styleMode" value="color" checked onclick="toggleStyleUI()"> Colors</label>
                         <label><input type="radio" name="styleMode" value="skin" onclick="toggleStyleUI()"> Skin URL</label>
                     </div>
-                    
                     <div id="colorPickersContainer" class="color-pickers">
                         <div class="cp-group"><label>Top</label><input type="color" id="colTop" value="#ffffff"></div>
                         <div class="cp-group"><label>Base</label><input type="color" id="colBot" value="#00ff88"></div>
                     </div>
-                    
                     <div id="skinInputContainer" style="display:none;"></div>
 
                     <div class="section-title">3. Nickname</div>
                     <input type="text" id="playerNameInput" placeholder="Enter Nickname..." maxlength="12">
                     
-                    <div class="section-title" style="margin-top:15px;">Graphics Quality</div>
                     <div class="quality-buttons">
+                        <div class="section-title" style="margin-top:15px;">Graphics Quality</div>
                         <button class="q-btn" id="qHigh" onclick="setQuality('high')">HIGH</button>
                         <button class="q-btn selected" id="qNormal" onclick="setQuality('normal')">NORMAL</button>
                         <button class="q-btn" id="qLow" onclick="setQuality('low')">LOW</button>
                     </div>
 
-                    <div class="section-title" style="margin-top:15px;">Map Theme</div>
-                    <div style="display:flex; gap:15px; margin-bottom:5px;">
-                        <label style="color:#aaa; font-size:11px; font-weight:bold; display:flex; align-items:center; gap:5px; cursor:pointer;">
-                            <input type="radio" name="themeMode" value="dark" checked onclick="setTheme('dark')"> Dark
-                        </label>
-                        <label style="color:#aaa; font-size:11px; font-weight:bold; display:flex; align-items:center; gap:5px; cursor:pointer;">
-                            <input type="radio" name="themeMode" value="grey" onclick="setTheme('grey')"> Grey
-                        </label>
-                        <label style="color:#aaa; font-size:11px; font-weight:bold; display:flex; align-items:center; gap:5px; cursor:pointer;">
-                            <input type="radio" name="themeMode" value="white" onclick="setTheme('white')"> White
-                        </label>
+                    <div class="theme-selector-container">
+                        <div class="section-title" style="margin-top:15px;">Map Theme</div>
+                        <div style="display:flex; gap:15px; margin-bottom:5px;">
+                            <label style="color:#aaa; font-size:11px; font-weight:bold; display:flex; align-items:center; gap:5px; cursor:pointer;"><input type="radio" name="themeMode" value="dark" checked onclick="setTheme('dark')"> Dark</label>
+                            <label style="color:#aaa; font-size:11px; font-weight:bold; display:flex; align-items:center; gap:5px; cursor:pointer;"><input type="radio" name="themeMode" value="grey" onclick="setTheme('grey')"> Grey</label>
+                            <label style="color:#aaa; font-size:11px; font-weight:bold; display:flex; align-items:center; gap:5px; cursor:pointer;"><input type="radio" name="themeMode" value="white" onclick="setTheme('white')"> White</label>
+                        </div>
                     </div>
 
                     <details class="advanced-settings">
@@ -676,95 +692,32 @@
                                     <button onclick="unlockSettings()" class="btn-reset" style="width:auto; margin:0; padding:5px 10px; color:#00ff88; border-color:#00ff88;">UNLOCK</button>
                                 </div>
                             </div>
-
                             <div id="settingsControls" style="display:none;">
                                 <div id="chaosModeContainer" style="margin: 0 0 10px 0; background: #220000; border: 1px dashed #ff2a2a; padding: 8px; border-radius: 6px;">
-                                    <label style="color:#ff5555; font-size:11px; font-weight:800; display:flex; align-items:center; gap:8px; cursor:pointer;">
-                                        <input type="checkbox" id="chaosModeToggle"> 🔥 SKILL TEST MODE (Bots get skills every 3s)
-                                    </label>
+                                    <label style="color:#ff5555; font-size:11px; font-weight:800; display:flex; align-items:center; gap:8px; cursor:pointer;"><input type="checkbox" id="chaosModeToggle"> 🔥 SKILL TEST MODE (Bots get skills every 3s)</label>
                                 </div>
-
                                 <div style="display:flex; justify-content:flex-start; margin-bottom:10px; background:#222; padding:5px; border-radius:4px;">
                                     <label style="color:#fff; font-size:11px; font-weight:bold; display:flex; align-items:center; gap:5px;"><input type="checkbox" id="godModeToggle"> GOD MODE (Invincible + Inf. Skills)</label>
                                 </div>
-
                                 <div class="section-title" style="margin-top:0;">WORLD GENETICS</div>
                                 <div class="bot-config-box">
-                                    <div class="bot-row">
-                                        <span>Map Size:</span>
-                                        <select id="mapMult" style="background:#111; color:#ccc; border:1px solid #333; border-radius:4px; font-size:10px; font-family:'Russo One'; padding:2px;">
-                                            <option value="1">x1</option>
-                                            <option value="2">x2</option>
-                                            <option value="3">x3</option>
-                                            <option value="4">x4</option>
-                                        </select>
-                                    </div>
-                                    <div class="bot-row">
-                                        <span>Food Mass Gain:</span>
-                                        <select id="foodMult" style="background:#111; color:#ccc; border:1px solid #333; border-radius:4px; font-size:10px; font-family:'Russo One'; padding:2px;">
-                                            <option value="1">x1</option>
-                                            <option value="2">x2</option>
-                                            <option value="3">x3</option>
-                                            <option value="4">x4</option>
-                                        </select>
-                                    </div>
-                                    <div class="bot-row">
-                                        <span>Base Speed:</span>
-                                        <select id="speedMult" style="background:#111; color:#ccc; border:1px solid #333; border-radius:4px; font-size:10px; font-family:'Russo One'; padding:2px;">
-                                            <option value="1" selected>x1 (Normal)</option>
-                                            <option value="1.25">x1.25</option>
-                                            <option value="1.5">x1.5</option>
-                                            <option value="1.75">x1.75</option>
-                                            <option value="2">x2</option>
-                                        </select>
-                                    </div>
-                                    <div class="bot-row">
-                                        <span>Virus Density:</span>
-                                        <select id="virusMult" style="background:#111; color:#ccc; border:1px solid #333; border-radius:4px; font-size:10px; font-family:'Russo One'; padding:2px;">
-                                            <option value="1">x1</option>
-                                            <option value="2">x2</option>
-                                            <option value="3">x3</option>
-                                            <option value="4">x4</option>
-                                        </select>
-                                    </div>
+                                    <div class="bot-row"><span>Map Size:</span><select id="mapMult" style="background:#111; color:#ccc; border:1px solid #333; border-radius:4px; font-size:10px; font-family:'Russo One'; padding:2px;"><option value="1">x1</option><option value="2">x2</option><option value="3">x3</option><option value="4">x4</option></select></div>
+                                    <div class="bot-row"><span>Food Mass Gain:</span><select id="foodMult" style="background:#111; color:#ccc; border:1px solid #333; border-radius:4px; font-size:10px; font-family:'Russo One'; padding:2px;"><option value="1">x1</option><option value="2">x2</option><option value="3">x3</option><option value="4">x4</option></select></div>
+                                    <div class="bot-row"><span>Base Speed:</span><select id="speedMult" style="background:#111; color:#ccc; border:1px solid #333; border-radius:4px; font-size:10px; font-family:'Russo One'; padding:2px;"><option value="1" selected>x1 (Normal)</option><option value="1.25">x1.25</option><option value="1.5">x1.5</option><option value="1.75">x1.75</option><option value="2">x2</option></select></div>
+                                    <div class="bot-row"><span>Virus Density:</span><select id="virusMult" style="background:#111; color:#ccc; border:1px solid #333; border-radius:4px; font-size:10px; font-family:'Russo One'; padding:2px;"><option value="1">x1</option><option value="2">x2</option><option value="3">x3</option><option value="4">x4</option></select></div>
                                 </div>
-
                                 <div class="section-title">BOT CONFIGURATION</div>
                                 <div class="bot-config-box">
-                                    <div class="bot-row">
-                                        <label style="display:flex; align-items:center; gap:5px;"><input type="checkbox" id="botsToggle" checked onchange="toggleBotOptions()"> Enable Bots</label>
-                                    </div>
+                                    <div class="bot-row"><label style="display:flex; align-items:center; gap:5px;"><input type="checkbox" id="botsToggle" checked onchange="toggleBotOptions()"> Enable Bots</label></div>
                                     <div id="botOptionsGroup">
-                                        <div class="bot-row">
-                                            <span>Count:</span>
-                                            <div class="slider-container">
-                                                <input type="range" id="botCountInput" min="0" max="50" value="25" oninput="document.getElementById('botCountVal').innerText = this.value">
-                                                <span id="botCountVal" class="val-display">25</span>
-                                            </div>
-                                        </div>
+                                        <div class="bot-row"><span>Count:</span><div class="slider-container"><input type="range" id="botCountInput" min="0" max="50" value="25" oninput="document.getElementById('botCountVal').innerText = this.value"><span id="botCountVal" class="val-display">25</span></div></div>
                                         <div class="bot-row"><span>Respawn:</span><input type="checkbox" id="botRespawnToggle" checked></div>
-                                        <div class="bot-row">
-                                            <span>Bot Max Splits:</span>
-                                            <select id="botSplitLimit" style="background:#111; color:#ccc; border:1px solid #333; border-radius:4px; font-size:10px; font-family:'Russo One'; padding:2px;">
-                                                <option value="4">4</option>
-                                                <option value="8">8</option>
-                                                <option value="16" selected>16</option>
-                                            </select>
-                                        </div>
+                                        <div class="bot-row"><span>Bot Max Splits:</span><select id="botSplitLimit" style="background:#111; color:#ccc; border:1px solid #333; border-radius:4px; font-size:10px; font-family:'Russo One'; padding:2px;"><option value="4">4</option><option value="8">8</option><option value="16" selected>16</option></select></div>
                                     </div>
                                 </div>
-
                                 <div style="margin-top:10px; padding-top:10px; border-top:1px solid #444;">
-                                    <div class="bot-row" style="margin-bottom: 5px;">
-                                        <label style="display:flex; align-items:center; gap:5px; cursor:pointer; color:#aaa;">
-                                            <input type="checkbox" id="noEnemyFX" onchange="toggleEnemyFX()"> Disable Enemy Visuals
-                                        </label>
-                                    </div>
-                                    <div class="bot-row">
-                                        <label style="display:flex; align-items:center; gap:5px; cursor:pointer; color:#aaa;">
-                                            <input type="checkbox" id="noEnemySnd" checked onchange="toggleEnemySnd()"> Disable Enemy Sounds
-                                        </label>
-                                    </div>
+                                    <div class="bot-row" style="margin-bottom: 5px;"><label style="display:flex; align-items:center; gap:5px; cursor:pointer; color:#aaa;"><input type="checkbox" id="noEnemyFX" onchange="toggleEnemyFX()"> Disable Enemy Visuals</label></div>
+                                    <div class="bot-row"><label style="display:flex; align-items:center; gap:5px; cursor:pointer; color:#aaa;"><input type="checkbox" id="noEnemySnd" checked onchange="toggleEnemySnd()"> Disable Enemy Sounds</label></div>
                                 </div>
                             </div>
                         </div>
@@ -772,10 +725,7 @@
 
                     <button class="btn-play" id="btnEnterGame" onclick="startGame()">ENTER ARENA</button>
                     <button class="btn-spectate" onclick="startSpectatorMode()">SPECTATE</button>
-                    
-                    <button id="qUltra" class="ultra-btn" onclick="setQuality('ultra')">
-                        ⚡ ULTRA LOW (FASTEST) ⚡
-                    </button>
+                    <button id="qUltra" class="ultra-btn" onclick="setQuality('ultra')">⚡ ULTRA LOW (FASTEST) ⚡</button>
                 </div>
 
                 <div class="login-right" id="arcadeGuidePanel" style="display:none;">
@@ -791,18 +741,13 @@
                     </div>
                     <div class="skills-grid-title">SKILLS DATABASE</div>
                     <div class="skills-grid" id="skillsGrid"></div>
-                    
-                    <!-- TARJETA INFERIOR CON ALTURA FIJA PARA EVITAR SALTOS -->
                     <div class="skill-info-card" id="skillInfoCard">
                         <div class="card-header"><span id="cardSkillName">SELECT A SKILL</span></div>
                         <div class="card-video-box">
                             <video id="cardSkillVideo" class="card-video-player" autoplay loop muted playsinline></video>
                         </div>
-                        <div id="cardSkillDesc" style="border-top: 1px solid #333; padding-top: 8px;">
-                            Description area...
-                        </div>
+                        <div id="cardSkillDesc" style="border-top: 1px solid #333; padding-top: 8px;">Description area...</div>
                     </div>
-                    
                     <div id="secretSkinPanel" style="display:none; margin-top: 15px; border-top: 1px solid #333; padding-top: 10px; text-align: center; animation: fadeIn 0.5s;">
                         <div style="color:#ffd700; font-family:'Russo One'; font-size:12px; margin-bottom:5px;">✨ SECRET SKIN UNLOCKED ✨</div>
                         <input type="text" id="secretSkinInput" value="https://upload.wikimedia.org/wikipedia/en/5/5f/Original_Doge_meme.jpg" placeholder="Paste Image URL..." style="width:100%; padding: 8px; font-size:11px; background:#000; border:1px solid #ffd700; color:#fff; border-radius:4px; box-sizing:border-box;">
@@ -840,8 +785,6 @@
                             <div class="card-lines-bottom" style="border-color:#00ffaa;"></div>
                         </div>
                     </div>
-                    
-                    <!-- VIDEO CORREGIDO (../video) -->
                     <div class="split-guide-box">
                         <video id="guideVideo" class="split-video" src="../video/Split.mp4" autoplay loop muted playsinline></video>
                         <div class="split-explanation" id="guideText">
@@ -1449,6 +1392,41 @@
         
         // --- MOBILE LAYOUT UPDATE ---
         updateMobileButtons();
+        resetMobileTabs();
+    }
+    
+    // --- MOBILE TABS LOGIC (LOGIN SCREEN) ---
+    function resetMobileTabs() {
+        if(window.innerWidth > 920) return;
+        // Default to Left (Play) panel visible
+        document.getElementById('loginPanelLeft').style.display = 'flex';
+        // Classic and Arcade guide panels are dynamically shown based on mode, but in mobile we start hidden
+        document.getElementById('arcadeGuidePanel').style.display = 'none'; 
+        document.getElementById('classicGuidePanel').style.display = 'none';
+        // But we need to know which one IS active to toggle visibility
+    }
+
+    function toggleMobileTab(tab) {
+        if(window.innerWidth > 920) return;
+        SoundManager.play('simpleselect');
+        
+        const leftPanel = document.getElementById('loginPanelLeft');
+        const rightPanelArcade = document.getElementById('arcadeGuidePanel');
+        const rightPanelClassic = document.getElementById('classicGuidePanel');
+        
+        if (tab === 'play') {
+            leftPanel.style.display = 'flex';
+            rightPanelArcade.style.display = 'none';
+            rightPanelClassic.style.display = 'none';
+        } else {
+            // Guide
+            leftPanel.style.display = 'none';
+            if (currentGameMode === 'arcade') {
+                rightPanelArcade.style.display = 'flex';
+            } else {
+                rightPanelClassic.style.display = 'flex';
+            }
+        }
     }
     
     // --- NUEVA FUNCIÓN PARA ACTUALIZAR BOTONES MÓVILES SEGÚN MODO ---
@@ -1531,7 +1509,7 @@
         }, {passive: false}); 
 
         window.addEventListener('touchstart', e => { 
-            if(e.target.closest('.ab-slot, button, #loginOverlay, #resultOverlay, #skillChoiceOverlay, #exitGameBtn, #exitModal, .nav-btn, #mobileControls, #forceFullscreen')) return; 
+            if(e.target.closest('.ab-slot, button, #loginOverlay, #resultOverlay, #skillChoiceOverlay, #exitGameBtn, #exitModal, .nav-btn, #mobileControls, #forceFullscreen, .mobile-nav-arrow')) return; 
             
             // Skill Choice handling on Mobile (Arcade)
             if (isPickingSkill && currentGameMode !== 'classic') {
@@ -1567,15 +1545,10 @@
     function toggleFullScreen() {
         if (!document.fullscreenElement) {
             document.documentElement.requestFullscreen().then(() => {
-                // Try to lock orientation to landscape
                 if (screen.orientation && screen.orientation.lock) {
-                    screen.orientation.lock("landscape").catch(err => {
-                        console.log("Orientation lock not supported/allowed");
-                    });
+                    screen.orientation.lock("landscape").catch(err => { console.log("Orientation lock not supported/allowed"); });
                 }
-            }).catch(err => {
-                console.log("Fullscreen request denied");
-            });
+            }).catch(err => { console.log("Fullscreen request denied"); });
         }
     }
 
@@ -1585,7 +1558,6 @@
         const overlay = document.getElementById('forceFullscreen');
 
         if (!isMobile) {
-            // PC: Hide strict overlay, rely on standard UI
             if (overlay) overlay.style.display = 'none';
             return;
         }
@@ -1601,11 +1573,8 @@
             }
         };
 
-        // Listeners
         document.addEventListener('fullscreenchange', checkFS);
-        document.addEventListener('webkitfullscreenchange', checkFS); // Safari/Old Chrome
-        
-        // Initial check
+        document.addEventListener('webkitfullscreenchange', checkFS); 
         checkFS();
     }
 
@@ -1646,9 +1615,6 @@
                     joyTouchId = null;
                     joyMoveX = 0; joyMoveY = 0;
                     stick.style.transform = `translate(-50%, -50%)`;
-                    // Reset mouse to center to stop moving when release? 
-                    // Or keep last direction? Standard .io is stop or keep.
-                    // Let's set input to center to stop.
                     mouse.x = width/2; mouse.y = height/2;
                     break;
                 }
@@ -1672,13 +1638,9 @@
 
             stick.style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`;
             
-            // Map to Game Mouse Coordinates relative to center
-            // "mouse" variable needs to be absolute screen coordinates that mimic looking at that point
-            // so physics calculate angle correctly.
-            // Center is width/2, height/2.
-            // We project a point far away in that direction.
+            // Map to Game Mouse Coordinates
             const angle = Math.atan2(dy, dx);
-            const projectDist = 500; // Arbitrary distance to ensure movement
+            const projectDist = 500; 
             mouse.x = (width/2) + Math.cos(angle) * projectDist;
             mouse.y = (height/2) + Math.sin(angle) * projectDist;
             inputMode = 'MOUSE';
@@ -2108,114 +2070,6 @@
         }
 
         const uniqueIds = new Set(enemies.map(e => e.id)); els.enemyCount.innerText = uniqueIds.size; updateLeaderboard();
-    }
-
-    function draw() {
-        ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--bg-color'); ctx.fillRect(0, 0, width, height); if (!gameRunning) return;
-        let es = getViewScale(); ctx.save(); ctx.translate(width/2, height/2); ctx.scale(es, es); ctx.translate(-camera.x, -camera.y);
-        let vL = camera.x - (width/2)/es - 100, vR = camera.x + (width/2)/es + 100, vT = camera.y - (height/2)/es - 100, vB = camera.y + (height/2)/es + 100;
-        ctx.lineWidth = 1; ctx.strokeStyle = getComputedStyle(document.body).getPropertyValue('--grid-line'); let g = 100, sX = Math.floor(vL/g)*g, eX = Math.ceil(vR/g)*g, sY = Math.floor(vT/g)*g, eY = Math.ceil(vB/g)*g; ctx.beginPath(); for(let x = sX; x <= eX; x+=g) { ctx.moveTo(x, vT); ctx.lineTo(x, vB); } for(let y = sY; y <= eY; y+=g) { ctx.moveTo(vL, y); ctx.lineTo(vR, y); } ctx.stroke(); 
-        
-        ctx.save(); ctx.beginPath(); ctx.lineWidth = 20; ctx.strokeStyle = 'rgba(255, 0, 0, 0.2)'; ctx.shadowBlur = 40; ctx.shadowColor = '#ff0000'; ctx.rect(-MAP_SIZE, -MAP_SIZE, MAP_SIZE*2, MAP_SIZE*2); ctx.stroke();
-        ctx.beginPath(); ctx.lineWidth = 4; ctx.strokeStyle = '#ff3333'; ctx.shadowBlur = 10; ctx.shadowColor = '#ff0000'; let dashOffset = (performance.now() / 20) % 60; ctx.setLineDash([30, 30]); ctx.lineDashOffset = -dashOffset; ctx.rect(-MAP_SIZE, -MAP_SIZE, MAP_SIZE*2, MAP_SIZE*2); ctx.stroke(); ctx.restore();
-
-        let spikeCount = 0; if (selectedQuality === 'high') spikeCount = 4; else if (selectedQuality === 'normal') spikeCount = 2; else if (selectedQuality === 'low') spikeCount = 1;
-
-        ctx.save();
-        for(let i=0; i<foods.length; i++) { 
-            let f = foods[i]; if (f.x > vL && f.x < vR && f.y > vT && f.y < vB) { 
-                ctx.fillStyle = f.c1; ctx.beginPath(); ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2); ctx.fill(); 
-                if (spikeCount > 0 && f.spikes) { for(let j = 0; j < spikeCount; j++) { let ang = f.spikes[j]; ctx.save(); ctx.translate(f.x, f.y); ctx.rotate(ang); ctx.fillStyle = f.c1; ctx.beginPath(); ctx.moveTo(f.r - 1, -f.r/2); ctx.lineTo(f.r + f.r/1.5, 0); ctx.lineTo(f.r - 1, f.r/2); ctx.fill(); ctx.restore(); } }
-            } 
-        }
-        ctx.restore();
-        
-        ctx.save();
-        ejectedMasses.forEach(m => { if (m.x > vL && m.x < vR && m.y > vT && m.y < vB) drawMiniPill(m, es); });
-        ctx.restore();
-
-        ctx.save();
-        projectiles.forEach(p => { if (p.x > vL && p.x < vR && p.y > vT && p.y < vB) { if (isLowQuality) { ctx.fillStyle = '#9EE32D'; ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill(); } else { ctx.save(); ctx.translate(p.x, p.y); let sL = 5; ctx.fillStyle = '#9EE32D'; ctx.strokeStyle = '#3E8E11'; ctx.lineWidth = 2; ctx.beginPath(); for(let i=0; i<16; i++) { let r=(i%2===0)?p.r + sL:p.r, a=(Math.PI*i)/8; (i===0)?ctx.moveTo(Math.cos(a)*r,Math.sin(a)*r):ctx.lineTo(Math.cos(a)*r,Math.sin(a)*r); } ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.restore(); } } });
-        ctx.restore();
-
-        explosions.forEach(e => e.draw());
-        
-        if (skills[5].active > 0 && player.cells.length > 0) { 
-            let avgX = 0, avgY = 0, maxR = 0; player.cells.forEach(c => { avgX += c.x; avgY += c.y; if(c.r > maxR) maxR = c.r; }); avgX /= player.cells.length; avgY /= player.cells.length; let magnetRad = SKILL_PARAMS.magnetRange + maxR; 
-            let timeLoop = (performance.now() / 1000) % 1; ctx.save(); ctx.translate(avgX, avgY);
-            for(let i=0; i<3; i++) { let offset = i * 0.33, t = (timeLoop + offset) % 1, radius = magnetRad * t, opacity = 1 - t; radius = magnetRad - radius; opacity = 1 - opacity; ctx.beginPath(); ctx.arc(0, 0, radius, 0, Math.PI * 2); ctx.strokeStyle = `rgba(160, 32, 240, ${opacity * 0.5})`; ctx.lineWidth = 2 + (opacity * 3); ctx.stroke(); } ctx.restore();
-        }
-
-        [...enemies, ...player.cells].sort((a,b) => a.r - b.r).forEach(e => { if (e.x + e.r > vL && e.x - e.r < vR && e.y + e.r > vT && e.y - e.r < vB) {
-            e.draw(); if (e.isBot && e.magnetTime > 0 && enableEnemyFX) { let magnetRad = SKILL_PARAMS.magnetRange + e.r; let timeLoop = (performance.now() / 1000) % 1; ctx.save(); ctx.translate(e.x, e.y); for(let i=0; i<3; i++) { let offset = i * 0.33, t = (timeLoop + offset) % 1, radius = magnetRad * t, opacity = 1 - t; radius = magnetRad - radius; opacity = 1 - opacity; ctx.beginPath(); ctx.arc(0, 0, radius, 0, Math.PI * 2); ctx.strokeStyle = `rgba(160, 32, 240, ${opacity * 0.5})`; ctx.lineWidth = 2 + (opacity * 3); ctx.stroke(); } ctx.restore(); }
-        }});
-        
-        ctx.save();
-        viruses.forEach(v => { 
-            if (v.x + v.r > vL && v.x - v.r < vR && v.y + v.r > vT && v.y - v.r < vB) { 
-                ctx.save(); ctx.translate(v.x, v.y);
-                let fillColor = '#9EE32D'; let strokeColor = '#3E8E11';
-                if (v.damaged) { fillColor = lerpColor('#9EE32D', '#a020f0', v.animTime); strokeColor = lerpColor('#3E8E11', '#501078', v.animTime); if(v.animTime < 1) { ctx.translate((Math.random()-0.5)*4, (Math.random()-0.5)*4); } }
-                if (selectedQuality === 'high' || selectedQuality === 'normal') {
-                    let grad = ctx.createRadialGradient(0, 0, v.r * 0.2, 0, 0, v.r); grad.addColorStop(0, '#ccff66'); grad.addColorStop(1, fillColor); ctx.fillStyle = grad; ctx.strokeStyle = strokeColor; ctx.lineWidth = 5; ctx.lineJoin = 'round';
-                    ctx.beginPath(); const numSpikes = 20; for(let i=0; i<numSpikes; i++) { let angle = (Math.PI * 2 * i) / numSpikes; let nextAngle = (Math.PI * 2 * (i+1)) / numSpikes; let midAngle = (angle + nextAngle) / 2; let rOut = v.r + 5; let xOut = Math.cos(midAngle) * rOut; let yOut = Math.sin(midAngle) * rOut; let rIn = v.r - 5; let xIn = Math.cos(nextAngle) * rIn; let yIn = Math.sin(nextAngle) * rIn; if (i===0) ctx.moveTo(Math.cos(angle)*rIn, Math.sin(angle)*rIn); ctx.quadraticCurveTo(Math.cos(angle + (midAngle-angle)/2) * rOut, Math.sin(angle + (midAngle-angle)/2) * rOut, xOut, yOut); ctx.quadraticCurveTo(Math.cos(midAngle + (nextAngle-midAngle)/2) * rOut, Math.sin(midAngle + (nextAngle-midAngle)/2) * rOut, xIn, yIn); } ctx.closePath(); ctx.fill(); ctx.stroke();
-                } else {
-                    ctx.fillStyle = fillColor; ctx.strokeStyle = strokeColor; ctx.lineWidth = 4; ctx.lineJoin = 'round'; ctx.beginPath(); for(let i=0; i<24; i++) { let r=(i%2===0)? v.r + 8 : v.r - 2; let a=(Math.PI*i)/12; (i===0)?ctx.moveTo(Math.cos(a)*r,Math.sin(a)*r):ctx.lineTo(Math.cos(a)*r,Math.sin(a)*r); } ctx.closePath(); ctx.fill(); ctx.stroke(); 
-                }
-                if (v.spots && !isLowQuality) { ctx.fillStyle = 'rgba(0,0,0,0.2)'; v.spots.forEach(spot => { ctx.beginPath(); ctx.arc(spot.x, spot.y, spot.r, 0, Math.PI*2); ctx.fill(); }); }
-                ctx.restore(); 
-            } 
-        });
-        ctx.restore();
-        
-        floatingTexts.forEach(ft => ft.draw(ctx)); ctx.restore(); uiTexts.forEach(ut => ut.draw(ctx));
-    }
-    
-    function drawMiniPill(f, scale) { let sR = f.r * scale; if (isLowQuality || sR < DRAW_LOD_THRESHOLD) { ctx.fillStyle = f.c1; ctx.beginPath(); ctx.arc(f.x, f.y, f.r, 0, Math.PI*2); ctx.fill(); } else { ctx.save(); ctx.translate(f.x, f.y); ctx.rotate(f.angle||0); let w = f.r * 2, h = w * 2.0, r = w / 2; ctx.beginPath(); ctx.roundRect(-w/2, -h/2, w, h, r); ctx.clip(); ctx.fillStyle = f.c1; ctx.fillRect(-w/2, -h/2, w, h/2); ctx.fillStyle = f.c2; ctx.fillRect(-w/2, 0, w, h/2); ctx.restore(); } }
-    function resize() { width = window.innerWidth; height = window.innerHeight; canvas.width = width; canvas.height = height; }
-    
-    // COLLISION RESOLUTION (Standard Cell-Cell Physics)
-    function resolveCellCollision(c1, c2, sameTeam) {
-        if (c1.tpPhase > 0 || c2.tpPhase > 0) return;
-        let dx = c1.x - c2.x; let dy = c1.y - c2.y; let dist = Math.sqrt(dx*dx + dy*dy); let minDist = c1.r + c2.r;
-        if (dist < minDist && dist > 0.001) {
-            let pen = minDist - dist;
-            if (sameTeam) {
-                if (c1.canMerge && c2.canMerge) {
-                    if (c1.mass >= c2.mass) { c1.r = Math.sqrt((c1.mass+c2.mass)/(Math.PI*PILL_RATIO)); c2.r = 0; }
-                    else { c2.r = Math.sqrt((c2.mass+c1.mass)/(Math.PI*PILL_RATIO)); c1.r = 0; }
-                } else {
-                    let f = pen / dist * 0.5; // smooth push
-                    let tx = dx * f; let ty = dy * f;
-                    c1.x += tx; c1.y += ty; c2.x -= tx; c2.y -= ty;
-                }
-            }
-        }
-    }
-
-    // UPDATE LEADERBOARD
-    function updateLeaderboard() {
-        let all = [];
-        if (player.cells.length > 0) {
-            let m = 0; player.cells.forEach(c => m += c.mass);
-            all.push({ name: player.name, mass: m, isMe: true });
-        }
-        let botMap = new Map();
-        enemies.forEach(e => {
-            if (!botMap.has(e.id)) botMap.set(e.id, { name: e.name, mass: 0, isMe: false });
-            botMap.get(e.id).mass += e.mass;
-        });
-        for (let b of botMap.values()) all.push(b);
-        all.sort((a,b) => b.mass - a.mass);
-        
-        let html = "";
-        for (let i=0; i<Math.min(5, all.length); i++) {
-            let p = all[i];
-            let displayMass = SHOW_MASS_AS_SCORE ? Math.floor(p.mass) : Math.floor(Math.sqrt(p.mass/Math.PI));
-            let cls = p.isMe ? "lb-item is-me" : "lb-item";
-            html += `<div class="${cls}"><span>${i+1}. ${p.name}</span><span>${displayMass}</span></div>`;
-        }
-        els.lbList.innerHTML = html;
     }
 
     const fpsInterval = 1000 / 60; let then = performance.now();

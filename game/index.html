@@ -209,6 +209,9 @@
             
             #modeScreen.hover-arcade .diagonal-divider { top: 60%; left: -10%; }
             #modeScreen.hover-classic .diagonal-divider { top: 40%; left: -10%; }
+
+            /* Ocultar botones de escritorio en móvil */
+            #exitGameBtn { display: none !important; }
         }
 
         .arcade-objective { font-size: 11px; color: #aaa; line-height: 1.5; margin-bottom: 20px; background: #111; padding: 10px; border-radius: 6px; border: 1px solid #333; }
@@ -393,9 +396,107 @@
         .tooltip-title { color: #fff; font-family: 'Russo One'; font-size: 16px; margin: 0 0 5px 0; text-transform: uppercase; }
         .tooltip-divider { width: 40px; height: 3px; background: var(--gold); margin-bottom: 10px; }
         .tooltip-desc { color: #ccc; font-size: 11px; line-height: 1.4; margin-bottom: 15px; }
+
+        /* --- CONTROLES MÓVILES (SOLO VISIBLES EN MÓVIL) --- */
+        #mobileControls {
+            display: none; /* Por defecto oculto, se activa con JS/Media */
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 999;
+        }
+
+        @media (max-width: 900px) {
+            #mobileControls { display: block; }
+            #actionBar { display: none !important; } /* Ocultar barra arcade de escritorio */
+            #exitGameBtn { display: none; }
+        }
+
+        /* JOYSTICK */
+        #joystickZone {
+            position: absolute; bottom: 50px; left: 50px; width: 120px; height: 120px;
+            background: rgba(255, 255, 255, 0.1); border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%; pointer-events: auto; touch-action: none;
+        }
+        #stick {
+            position: absolute; top: 50%; left: 50%; width: 50px; height: 50px;
+            background: rgba(255, 255, 255, 0.5); border-radius: 50%;
+            transform: translate(-50%, -50%); pointer-events: none;
+        }
+
+        /* BOTONES DE ACCIÓN */
+        #mobileActions {
+            position: absolute; bottom: 40px; right: 40px;
+            display: flex; gap: 15px; align-items: flex-end;
+            pointer-events: auto;
+        }
+        .mob-btn {
+            width: 60px; height: 60px; border-radius: 50%;
+            background: rgba(0, 0, 0, 0.5); border: 2px solid rgba(255, 255, 255, 0.3);
+            color: #fff; font-family: 'Russo One'; font-size: 12px;
+            display: flex; justify-content: center; align-items: center;
+            touch-action: manipulation; user-select: none; -webkit-user-select: none;
+        }
+        .mob-btn:active { background: rgba(255, 255, 255, 0.3); transform: scale(0.95); }
+        .mob-big { width: 70px; height: 70px; font-size: 14px; background: rgba(255, 42, 42, 0.3); border-color: rgba(255, 42, 42, 0.6); }
+
+        /* Fullscreen btn */
+        #mobFullscreen {
+            position: absolute; top: 10px; right: 10px;
+            width: 40px; height: 40px; background: rgba(0,0,0,0.5); border: 1px solid #555;
+            border-radius: 6px; color: #fff; display: flex; justify-content: center; align-items: center;
+            pointer-events: auto; font-size: 20px;
+        }
+
+        /* ORIENTATION WARNING */
+        #orientationLock {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 9999; flex-direction: column; justify-content: center; align-items: center;
+            color: #fff; font-family: 'Russo One'; text-align: center;
+        }
+        @media screen and (orientation: portrait) and (max-width: 900px) {
+            #orientationLock { display: flex; }
+        }
+
+        /* ARCADE MOBILE SLOTS */
+        .arcade-mob-grid {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;
+            margin-right: 10px;
+        }
+        .mob-skill-slot {
+            width: 50px; height: 50px; background: rgba(0,0,0,0.6); border: 1px solid #555;
+            border-radius: 8px; position: relative;
+        }
+        .mob-skill-slot.active { border-color: var(--primary); }
     </style>
 </head>
 <body>
+
+ <!-- MOBILE CONTROLS (Solo visible en móvil) -->
+    <div id="orientationLock">
+        <svg fill="#fff" width="64px" height="64px" viewBox="0 0 24 24"><path d="M16.48 2.52c3.27 1.55 5.61 4.72 5.97 8.48h1.5C23.44 4.84 18.29 0 12 0l-1 .08v3.02h1c1.61 0 3.09.55 4.48 1.42zM19.48 13c-.36 3.76-2.7 6.93-5.97 8.48l-.03.02 1.49 1.49C16.11 21.55 17.6 21 19.48 13zM0 12c0 6.62 5.38 12 12 12h1v-3.02l-1 .02c-5.17 0-9.41-3.87-9.95-8.8H.05v-.2h2.03C2.59 7.07 6.83 3.2 12 3.2l1-.02V.18H12C5.38.18 0 5.54 0 12zM12 18l4-4-4-4v8z"/></svg>
+        <div style="margin-top:20px;">PLEASE ROTATE DEVICE</div>
+    </div>
+
+    <div id="mobileControls">
+        <div id="joystickZone"><div id="stick"></div></div>
+        
+        <div id="mobFullscreen" onclick="toggleFullScreen()">⛶</div>
+
+        <div id="mobileActions">
+            <!-- Arcade Skills Container (4 slots) -->
+            <div id="mobArcadeSlots" class="arcade-mob-grid" style="display:none;">
+                <div class="mob-btn mob-skill-slot" id="mobSlot1" ontouchstart="activateSkillTouch(1, event)"></div>
+                <div class="mob-btn mob-skill-slot" id="mobSlot2" ontouchstart="activateSkillTouch(2, event)"></div>
+                <div class="mob-btn mob-skill-slot" id="mobSlot3" ontouchstart="activateSkillTouch(3, event)"></div>
+                <div class="mob-btn mob-skill-slot" id="mobSlot4" ontouchstart="activateSkillTouch(4, event)"></div>
+            </div>
+
+            <!-- Botón Shoot (Solo Classic) -->
+            <div id="mobShootBtn" class="mob-btn" style="display:none;" ontouchstart="activateSkillTouch(1, event)">SHOOT</div>
+            
+            <!-- Botón Split (Común) -->
+            <div class="mob-btn mob-big" ontouchstart="splitPlayerMobile(event)">SPLIT</div>
+        </div>
+    </div>
 
  <!-- BOTONES SONIDO/MUSICA Y SALIDA -->
     <div id="soundToggle" class="sound-btn" onclick="toggleAudio()" title="Sound Effects">
@@ -786,6 +887,12 @@
     let selectedQuality = 'normal';
     let enableEnemyFX = true;
     let enableEnemySnd = true;
+
+    // --- MOBILE VARS ---
+    let isMobileInput = false;
+    let joyTouchId = null;
+    let joyStartX = 0, joyStartY = 0;
+    let joyMoveX = 0, joyMoveY = 0;
 
     const SoundManager = {
         muted: false, musicMuted: false,
@@ -1288,6 +1395,21 @@
         MAX_BOT_CELLS = parseInt(splitSelect.value); 
         checkActiveRoomConfig();
         setTimeout(() => { els.modeScreen.style.display = 'none'; els.loginOverlay.style.display = 'flex'; els.modeScreen.style.pointerEvents = 'auto'; }, 1200); 
+        
+        // --- MOBILE LAYOUT UPDATE ---
+        updateMobileButtons();
+    }
+    
+    // --- NUEVA FUNCIÓN PARA ACTUALIZAR BOTONES MÓVILES SEGÚN MODO ---
+    function updateMobileButtons() {
+        if (currentGameMode === 'classic') {
+            document.getElementById('mobArcadeSlots').style.display = 'none';
+            document.getElementById('mobShootBtn').style.display = 'flex';
+        } else {
+            // Arcade mode: 4 slots, no basic shoot
+            document.getElementById('mobArcadeSlots').style.display = 'grid';
+            document.getElementById('mobShootBtn').style.display = 'none';
+        }
     }
 
     function goBackToModes() { 
@@ -1325,7 +1447,18 @@
 
     function init() { 
         SoundManager.init(); resize(); 
-        for(let i=1; i<=10; i++) { uiSlots[i] = document.getElementById('slot'+i); uiCounts[i] = document.getElementById('count'+i); uiOverlays[i] = document.getElementById('cd'+i); uiOverlaysActive[i] = document.getElementById('dur'+i); uiIcons[i] = document.getElementById('icon'+i); uiGcds[i] = document.getElementById('gcd'+i); } 
+        for(let i=1; i<=10; i++) { 
+            uiSlots[i] = document.getElementById('slot'+i); 
+            uiCounts[i] = document.getElementById('count'+i); 
+            uiOverlays[i] = document.getElementById('cd'+i); 
+            uiOverlaysActive[i] = document.getElementById('dur'+i); 
+            uiIcons[i] = document.getElementById('icon'+i); 
+            uiGcds[i] = document.getElementById('gcd'+i); 
+        } 
+        
+        // Map arcade slots in DOM to the JS logic for mobile too (optional visual sync)
+        // (Logic handled in updateSkillsUI_Arcade)
+
         els.skillOverlay.style.top = UI_PARAMS.skillSelectTop; window.addEventListener('resize', resize); 
         els.actionBar.addEventListener('mouseenter', () => isHoveringUI = true); els.actionBar.addEventListener('mouseleave', () => isHoveringUI = false);
         els.skillOverlay.addEventListener('mouseenter', () => isHoveringUI = true); els.skillOverlay.addEventListener('mouseleave', () => isHoveringUI = false);
@@ -1335,8 +1468,37 @@
         window.addEventListener('mousedown', e => { if(isSpectating && !isHoveringUI) { isSpecDragging = true; lastSpecX = e.clientX; lastSpecY = e.clientY; } });
         window.addEventListener('mouseup', () => { isSpecDragging = false; });
         window.addEventListener('mousemove', e => { if(isHoveringUI || isLoggingOut) return; mouse.x = e.clientX; mouse.y = e.clientY; if (!isSpectating && !(keys.w || keys.a || keys.s || keys.d)) { inputMode = 'MOUSE'; } });
-        window.addEventListener('touchmove', e => { if (!gameRunning || isLoggingOut) return; e.preventDefault(); const t = e.touches[0]; mouse.x = t.clientX; mouse.y = t.clientY; inputMode = 'MOUSE'; }, {passive: false}); 
-        window.addEventListener('touchstart', e => { if(e.target.closest('.ab-slot, button, #loginOverlay, #resultOverlay, #skillChoiceOverlay, #exitGameBtn, #exitModal, .nav-btn')) return; const now = Date.now(); if (now - lastTapTime < 300) { splitPlayer(); e.preventDefault(); } else { if(e.touches[0] && !isLoggingOut){ mouse.x = e.touches[0].clientX; mouse.y = e.touches[0].clientY; inputMode = 'MOUSE'; } } lastTapTime = now; }, {passive: false}); 
+        
+        // --- TOUCH CONTROLS ---
+        // Basic touch for desktop emulation (fallback)
+        window.addEventListener('touchmove', e => { 
+            if (!gameRunning || isLoggingOut) return; 
+            // If joystick is active, don't use global touch for movement
+            if (isMobileInput) return;
+            
+            e.preventDefault(); const t = e.touches[0]; mouse.x = t.clientX; mouse.y = t.clientY; inputMode = 'MOUSE'; 
+        }, {passive: false}); 
+
+        window.addEventListener('touchstart', e => { 
+            if(e.target.closest('.ab-slot, button, #loginOverlay, #resultOverlay, #skillChoiceOverlay, #exitGameBtn, #exitModal, .nav-btn, #mobileControls')) return; 
+            
+            // Skill Choice handling on Mobile (Arcade)
+            if (isPickingSkill && currentGameMode !== 'classic') {
+                // If user taps outside buttons, maybe cycle choice or do nothing.
+                // Already handled by .skill-opt-btn click.
+                return; 
+            }
+
+            const now = Date.now(); 
+            if (now - lastTapTime < 300) { splitPlayer(); e.preventDefault(); } 
+            else { 
+                if(e.touches[0] && !isLoggingOut && !isMobileInput){ 
+                    mouse.x = e.touches[0].clientX; mouse.y = e.touches[0].clientY; inputMode = 'MOUSE'; 
+                } 
+            } 
+            lastTapTime = now; 
+        }, {passive: false}); 
+
         window.addEventListener('keydown', e => { 
             if (!gameRunning) return; if (e.code === 'Escape') { toggleExitModal(); return; }
             if (isPickingSkill) { if (e.code === 'Tab') { e.preventDefault(); SoundManager.playSimpleHover(); skillChoiceIndex = (skillChoiceIndex === 0) ? 1 : 0; updateChoiceVisuals(); return; } if (e.code === 'KeyQ') { let options = els.skillOpts.children; if(options[skillChoiceIndex]) options[skillChoiceIndex].click(); return; } }
@@ -1344,14 +1506,119 @@
             if (e.code === 'Space') splitPlayer(); if (['KeyW','KeyA','KeyS','KeyD'].includes(e.code)) { inputMode = 'KEYBOARD'; if(!isLoggingOut) keys[e.code.slice(-1).toLowerCase()] = true; } 
         });
         window.addEventListener('keyup', e => { if (e.code.startsWith('Digit')) { let id = parseInt(e.code.slice(-1)); if(id === 0) id = 10; if(id >= 1 && id <= 10 && uiSlots[id]) uiSlots[id].classList.remove('active'); } if (['KeyW','KeyA','KeyS','KeyD'].includes(e.code)) keys[e.code.slice(-1).toLowerCase()] = false; });
+        
+        initMobileControls();
         loop(); 
+    }
+
+    // --- MOBILE JOYSTICK LOGIC ---
+    function initMobileControls() {
+        // Detect if mobile
+        if(window.innerWidth <= 900) {
+            isMobileInput = true;
+        }
+
+        const zone = document.getElementById('joystickZone');
+        const stick = document.getElementById('stick');
+
+        zone.addEventListener('touchstart', e => {
+            e.preventDefault();
+            const touch = e.changedTouches[0];
+            joyTouchId = touch.identifier;
+            const rect = zone.getBoundingClientRect();
+            // Center of joystick zone
+            joyStartX = rect.left + rect.width / 2;
+            joyStartY = rect.top + rect.height / 2;
+            updateJoystick(touch.clientX, touch.clientY);
+        }, {passive: false});
+
+        zone.addEventListener('touchmove', e => {
+            e.preventDefault();
+            for(let i=0; i<e.changedTouches.length; i++) {
+                if(e.changedTouches[i].identifier === joyTouchId) {
+                    updateJoystick(e.changedTouches[i].clientX, e.changedTouches[i].clientY);
+                    break;
+                }
+            }
+        }, {passive: false});
+
+        const endJoystick = (e) => {
+             for(let i=0; i<e.changedTouches.length; i++) {
+                if(e.changedTouches[i].identifier === joyTouchId) {
+                    joyTouchId = null;
+                    joyMoveX = 0; joyMoveY = 0;
+                    stick.style.transform = `translate(-50%, -50%)`;
+                    // Reset mouse to center to stop moving when release? 
+                    // Or keep last direction? Standard .io is stop or keep.
+                    // Let's set input to center to stop.
+                    mouse.x = width/2; mouse.y = height/2;
+                    break;
+                }
+            }
+        };
+
+        zone.addEventListener('touchend', endJoystick);
+        zone.addEventListener('touchcancel', endJoystick);
+
+        function updateJoystick(clientX, clientY) {
+            const maxDist = 35; // Stick movement radius
+            let dx = clientX - joyStartX;
+            let dy = clientY - joyStartY;
+            let dist = Math.sqrt(dx*dx + dy*dy);
+            
+            if(dist > maxDist) {
+                const ratio = maxDist / dist;
+                dx *= ratio;
+                dy *= ratio;
+            }
+
+            stick.style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`;
+            
+            // Map to Game Mouse Coordinates relative to center
+            // "mouse" variable needs to be absolute screen coordinates that mimic looking at that point
+            // so physics calculate angle correctly.
+            // Center is width/2, height/2.
+            // We project a point far away in that direction.
+            const angle = Math.atan2(dy, dx);
+            const projectDist = 500; // Arbitrary distance to ensure movement
+            mouse.x = (width/2) + Math.cos(angle) * projectDist;
+            mouse.y = (height/2) + Math.sin(angle) * projectDist;
+            inputMode = 'MOUSE';
+        }
+    }
+
+    // --- MOBILE ACTION HANDLERS ---
+    function splitPlayerMobile(e) {
+        e.preventDefault();
+        splitPlayer();
+    }
+    
+    function toggleFullScreen() {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().catch(err => {});
+        } else {
+            document.exitFullscreen();
+        }
     }
 
     function dragStart(ev, idx) { if(currentGameMode !== 'arcade' && currentGameMode !== 'skills') return; draggedIdx = idx; ev.dataTransfer.effectAllowed = "move"; }
     function allowDrop(ev) { if(currentGameMode !== 'arcade' && currentGameMode !== 'skills') return; ev.preventDefault(); }
     function drop(ev, dropIdx) { if(currentGameMode !== 'arcade' && currentGameMode !== 'skills') return; ev.preventDefault(); if(draggedIdx === -1 || draggedIdx === dropIdx) return; let temp = playerSkills[draggedIdx]; playerSkills[draggedIdx] = playerSkills[dropIdx]; playerSkills[dropIdx] = temp; updateSkillsUI_Arcade(); draggedIdx = -1; }
     function removeSkill(slotIdx) { let idx = slotIdx - 1; if(playerSkills[idx] && !isGodMode && playerSkills[idx].uses <= 0) { playerSkills[idx] = null; updateSkillsUI_Arcade(); } }
-    function activateSkillTouch(slotIdx, event) { if(currentGameMode === 'classic' && slotIdx !== 1) return; event.preventDefault(); event.stopPropagation(); if(uiSlots[slotIdx]) { uiSlots[slotIdx].classList.add('active'); setTimeout(() => uiSlots[slotIdx].classList.remove('active'), 150); } useSkill(slotIdx); }
+    
+    // Updated for Mobile Arcade Buttons + Desktop
+    function activateSkillTouch(slotIdx, event) { 
+        if (event) { event.preventDefault(); event.stopPropagation(); }
+        if(currentGameMode === 'classic' && slotIdx !== 1) return; 
+        
+        // Visual feedback on DOM
+        if(uiSlots[slotIdx]) { uiSlots[slotIdx].classList.add('active'); setTimeout(() => uiSlots[slotIdx].classList.remove('active'), 150); }
+        // Mobile DOM feedback
+        const mobSlot = document.getElementById('mobSlot'+slotIdx);
+        if(mobSlot) { mobSlot.classList.add('active'); setTimeout(() => mobSlot.classList.remove('active'), 150); }
+        
+        useSkill(slotIdx); 
+    }
 
     function useSkill(slotIndex) {
         if (!gameRunning) return; if (globalCDTimer > 0) { SoundManager.play('cd'); return; }
@@ -1372,9 +1639,58 @@
     function updateSkillsUI_Arcade() {
         if(currentGameMode !== 'arcade' && currentGameMode !== 'skills') return;
         for(let i=0; i<10; i++) {
-            let slotNum = i+1, divSlot = uiSlots[slotNum]; if (i >= playerSkills.length) { if(divSlot) divSlot.style.display = 'none'; continue; } else { if(divSlot) divSlot.style.display = 'flex'; }
-            let skill = playerSkills[i], iconDiv = uiIcons[slotNum], countBadge = uiCounts[slotNum]; if(!iconDiv) continue; iconDiv.className = 'skill-icon';
-            if (skill) { let def = skills[skill.id]; iconDiv.classList.add(def.icon); countBadge.style.display = 'block'; countBadge.innerText = isGodMode ? "∞" : skill.uses; countBadge.style.background = (skill.uses <= 0 && !isGodMode) ? '#555' : '#ff2a2a'; uiSlots[slotNum].style.opacity = (skill.uses <= 0 && !isGodMode) ? '0.5' : '1'; uiSlots[slotNum].style.cursor = (skill.uses <= 0 && !isGodMode) ? 'alias' : 'grab'; } else { iconDiv.classList.add('icon-empty'); countBadge.style.display = 'none'; uiSlots[slotNum].style.opacity = '1'; uiOverlays[slotNum].style.height = '0%'; uiOverlaysActive[slotNum].style.height = '0%'; uiSlots[slotNum].style.cursor = 'grab'; }
+            let slotNum = i+1, divSlot = uiSlots[slotNum]; 
+            // Mobile Slot Update
+            let mobSlot = document.getElementById('mobSlot'+slotNum);
+
+            if (i >= playerSkills.length) { 
+                if(divSlot) divSlot.style.display = 'none'; 
+                if(mobSlot) mobSlot.style.display = 'none';
+                continue; 
+            } else { 
+                if(divSlot) divSlot.style.display = 'flex'; 
+                if(mobSlot) mobSlot.style.display = 'flex';
+            }
+
+            let skill = playerSkills[i], iconDiv = uiIcons[slotNum], countBadge = uiCounts[slotNum]; 
+            if(!iconDiv) continue; 
+            iconDiv.className = 'skill-icon';
+
+            if (skill) { 
+                let def = skills[skill.id]; 
+                // Desktop
+                iconDiv.classList.add(def.icon); 
+                countBadge.style.display = 'block'; 
+                countBadge.innerText = isGodMode ? "∞" : skill.uses; 
+                countBadge.style.background = (skill.uses <= 0 && !isGodMode) ? '#555' : '#ff2a2a'; 
+                uiSlots[slotNum].style.opacity = (skill.uses <= 0 && !isGodMode) ? '0.5' : '1'; 
+                uiSlots[slotNum].style.cursor = (skill.uses <= 0 && !isGodMode) ? 'alias' : 'grab'; 
+
+                // Mobile
+                if(mobSlot) {
+                    mobSlot.style.backgroundImage = `url('${SKILL_DESCRIPTIONS[skill.id].icon}')`;
+                    mobSlot.style.backgroundSize = "contain";
+                    mobSlot.style.backgroundRepeat = "no-repeat";
+                    mobSlot.style.backgroundPosition = "center";
+                    mobSlot.style.opacity = (skill.uses <= 0 && !isGodMode) ? '0.5' : '1'; 
+                    mobSlot.innerText = isGodMode ? "" : (skill.uses > 1 ? skill.uses : "");
+                }
+            } else { 
+                // Desktop
+                iconDiv.classList.add('icon-empty'); 
+                countBadge.style.display = 'none'; 
+                uiSlots[slotNum].style.opacity = '1'; 
+                uiOverlays[slotNum].style.height = '0%'; 
+                uiOverlaysActive[slotNum].style.height = '0%'; 
+                uiSlots[slotNum].style.cursor = 'grab'; 
+
+                // Mobile
+                if(mobSlot) {
+                    mobSlot.style.backgroundImage = "none";
+                    mobSlot.style.background = "rgba(0,0,0,0.6)";
+                    mobSlot.innerText = "";
+                }
+            }
         }
     }
 
@@ -1776,29 +2092,13 @@
             let pen = minDist - dist;
             if (sameTeam) {
                 if (c1.canMerge && c2.canMerge) {
-                    // Merge logic handled elsewhere or instant for teammates? Usually in agar.io they merge.
-                    // Simplified: if both can merge, bigger eats smaller.
-                    // But here we implement smooth pushing if not merging.
-                    // Let's implement merge in next update logic if needed. 
-                    // For now, simple push separation if can't merge.
-                    if (c1.canMerge && c2.canMerge) {
-                        if (c1.mass >= c2.mass) { c1.r = Math.sqrt((c1.mass+c2.mass)/(Math.PI*PILL_RATIO)); c2.r = 0; }
-                        else { c2.r = Math.sqrt((c2.mass+c1.mass)/(Math.PI*PILL_RATIO)); c1.r = 0; }
-                    } else {
-                        // Push apart
-                        let f = pen / dist * 0.5; // smooth push
-                        let tx = dx * f; let ty = dy * f;
-                        c1.x += tx; c1.y += ty; c2.x -= tx; c2.y -= ty;
-                    }
+                    if (c1.mass >= c2.mass) { c1.r = Math.sqrt((c1.mass+c2.mass)/(Math.PI*PILL_RATIO)); c2.r = 0; }
+                    else { c2.r = Math.sqrt((c2.mass+c1.mass)/(Math.PI*PILL_RATIO)); c1.r = 0; }
                 } else {
-                    // Hard collision not possible, they overlap.
-                    // If enemy, eat logic is handled in main loop.
-                    // If simplified physics:
+                    let f = pen / dist * 0.5; // smooth push
+                    let tx = dx * f; let ty = dy * f;
+                    c1.x += tx; c1.y += ty; c2.x -= tx; c2.y -= ty;
                 }
-            } else {
-                 // Enemies: Eat logic handled in main loop (updateGame).
-                 // They don't push each other unless they are roughly same size and neither can eat other.
-                 // But typically in .io games, they just overlap until size diff is enough.
             }
         }
     }

@@ -3,11 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PillWars - The Crypto Arena </title>
+    <title>PillWars Arena - Mobile Optimized</title>
     
-    <!-- FAVICON -->
     <link rel="icon" href="../img/web.png">
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Russo+One&display=swap" rel="stylesheet">
@@ -34,7 +32,7 @@
             transition: background-color 0.5s ease;
         }
 
-        /* --- UI & BUTTONS --- */
+        /* --- UI DESKTOP & SHARED --- */
         .sound-btn {
             position: absolute; top: 20px;
             width: 40px; height: 40px; z-index: 100;
@@ -49,6 +47,14 @@
         #musicToggle { right: 70px; }
         #exitGameBtn { right: 120px; border-color: #522; color: #f55; display: none; }
         #exitGameBtn:hover { background: rgba(255, 50, 50, 0.2); border-color: #f00; color: #fff; }
+
+        /* Botón Global Fullscreen (Visible siempre, estilo Desktop) */
+        #globalFullscreenBtn {
+            position: absolute; top: 20px; left: 20px; z-index: 200;
+            background: rgba(0,0,0,0.6); border: 1px solid #333; color: white;
+            padding: 8px 12px; border-radius: 6px; font-family: 'Russo One'; font-size: 12px;
+            cursor: pointer; display: none; /* Oculto en PC por defecto, se activa con JS/Media */
+        }
 
         .sound-on, .sound-off { display: block; } 
         .sound-btn:not(.muted) .sound-off { display: none !important; }
@@ -182,72 +188,88 @@
 
         @keyframes slideOutLeft { to { opacity: 1; transform: translate(0, -50%); } }
 
-        /* --- RESPONSIVE / MOBILE CSS (ACTUALIZADO PARA LANDSCAPE) --- */
-        @media (max-width: 900px) {
-            /* MODO PANTALLA: Forzar visualización correcta en horizontal */
-            #modeScreen { flex-direction: column; }
-            .mode-panel { width: 100%; height: 50%; padding: 5%; clip-path: none !important; }
+        /* --- MOBILE OPTIMIZATIONS (LANDSCAPE SPECIFIC) --- */
+        /* Asegura que esto NO afecta a Desktop normal, solo a pantallas pequeñas */
+        @media (max-width: 920px) {
             
-            /* Ajuste para que se vean bien en landscape */
-            @media (orientation: landscape) {
-                #modeScreen { flex-direction: row; }
-                .mode-panel { width: 50%; height: 100%; }
-                
-                /* Layout para Arcade (Izquierda) */
-                .mode-arcade { left: 0; top: 0; align-items: center; justify-content: center; text-align: center; border-right: 2px solid #333; }
-                /* Layout para Classic (Derecha) */
-                .mode-classic { right: 0; top: 0; align-items: center; justify-content: center; text-align: center; }
-                
-                #contentArcade, #contentClassic { 
-                    position: relative; left: auto; top: auto; transform: none; 
-                    opacity: 1 !important; width: 90%; margin: 0 auto;
-                }
+            /* Mostrar botón de fullscreen global */
+            #globalFullscreenBtn { display: block; }
+            #exitGameBtn { display: none !important; } /* Ocultar el de PC */
 
-                .mode-title { font-size: 32px; }
-                .mode-desc { display: none; /* Ocultar descripciones largas en móvil landscape */ }
-                .diagonal-divider { display: none; }
+            /* 1. MODO SELECCIÓN: Partir pantalla en 2 sin diagonales */
+            #modeScreen { flex-direction: row; }
+            .diagonal-divider { display: none; }
+            
+            .mode-panel {
+                width: 50% !important; height: 100% !important;
+                clip-path: none !important; /* Quitar recortes */
+                top: 0 !important; bottom: 0 !important;
+                padding: 10px !important;
+                display: flex; align-items: center; justify-content: center;
+                text-align: center;
             }
+            .mode-arcade { left: 0; border-right: 2px solid #333; align-items: center; }
+            .mode-classic { right: 0; left: auto; align-items: center; }
 
-            @media (orientation: portrait) {
-                 .mode-arcade { clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%) !important; }
-                 .mode-classic { clip-path: polygon(0 15%, 100% 0, 100% 100%, 0 100%) !important; }
+            .mode-content {
+                position: relative; left: auto !important; top: auto !important;
+                transform: none !important; opacity: 1 !important; width: 100%;
+                margin: 0;
             }
+            #contentArcade, #contentClassic { text-align: center; }
 
-            /* LOGIN BOX FIX PARA MÓVIL */
-            .login-box { 
-                width: 98%; max-width: none; 
-                height: 95vh; max-height: 95vh;
+            .mode-title { font-size: 28px; margin-bottom: 5px; }
+            .mode-sub { font-size: 10px; }
+            .mode-desc { display: none; } /* Ocultar texto largo */
+
+            /* 2. LOGIN BOX: Compacto con Scroll */
+            .login-box {
+                width: 96%; height: 96%; max-height: 96%;
+                padding: 10px; 
                 display: flex; flex-direction: column;
-                padding: 10px; box-sizing: border-box;
-                overflow: hidden; /* Evitar scroll en el contenedor principal */
+                overflow: hidden; /* Evitar scroll en el body overlay */
             }
             
-            /* Scroll interno para el contenido */
-            .login-content-wrapper { 
-                flex: 1; overflow-y: auto; 
-                flex-direction: row; flex-wrap: wrap; /* Permitir lado a lado en landscape */
-                gap: 15px;
-                padding-bottom: 20px;
-            }
-            
-            .login-left, .login-right { 
-                flex: 1 1 300px; /* Base 300px, crecer si hay espacio */
-                width: 100%; min-width: 0;
+            .login-content-wrapper {
+                flex: 1; overflow-y: auto; /* Scroll interno vital */
+                display: flex; flex-direction: row; gap: 15px;
+                padding-bottom: 40px; /* Espacio para el dedo al hacer scroll */
             }
 
-            .login-right { border-left: none; border-top: 1px solid #333; padding-left: 0; padding-top: 10px; margin-top: 10px; }
-            
-            /* Ajuste de opciones avanzadas para que no se salgan */
-            .options-content { position: static; transform: none; width: 100%; animation: none; opacity: 1; margin-top: 10px; }
-            
-            /* Botón Enter siempre visible o fácil de alcanzar */
-            .btn-play { padding: 15px; font-size: 20px; margin-bottom: 20px; }
+            .login-left { 
+                flex: 1; min-width: 0; 
+                display: flex; flex-direction: column; gap: 5px;
+            }
+            .login-right {
+                flex: 1; min-width: 0;
+                border-left: 1px solid #333; padding-left: 10px; margin-top: 0; border-top: none;
+                background: transparent;
+            }
 
-            /* Ocultar elementos de escritorio */
-            #exitGameBtn { display: none !important; }
+            /* Reducciones de tamaño */
+            .section-title { font-size: 9px; margin: 5px 0 2px; }
+            .srv-btn, .q-btn { padding: 4px 0; font-size: 10px; }
+            input[type="text"] { padding: 6px; font-size: 11px; }
+            .btn-play { padding: 10px; font-size: 16px; margin-top: 15px; }
+            .btn-spectate { padding: 8px; font-size: 12px; margin-top: 5px; }
+            .ultra-btn { font-size: 9px; padding: 5px; }
+            
+            /* Ajuste de opciones avanzadas para que no floten fuera */
+            .options-content {
+                position: static; transform: none; width: 100%; 
+                opacity: 1; animation: none; margin-top: 10px;
+                background: rgba(0,0,0,0.5);
+            }
+
+            /* Arcade/Classic Guide Panel en Login */
+            .arcade-objective { font-size: 9px; padding: 5px; margin-bottom: 5px; }
+            .grid-skill-icon { width: 35px; height: 35px; }
+            .card-header { font-size: 12px; }
+            .card-video-box { min-height: 80px; height: 100px !important; }
+            #cardSkillDesc { font-size: 9px; height: 40px; line-height: 1.1; }
+            .split-video { height: 100px; }
         }
 
-        .arcade-objective { font-size: 11px; color: #aaa; line-height: 1.5; margin-bottom: 20px; background: #111; padding: 10px; border-radius: 6px; border: 1px solid #333; }
         .skills-grid-title { font-family: 'Russo One'; font-size: 12px; color: #666; margin-bottom: 10px; letter-spacing: 1px; }
         .skills-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
         .grid-skill-icon { width: 50px; height: 50px; background-color: #1a1a1a; border: 2px solid #444; border-radius: 8px; cursor: pointer; transition: all 0.2s; background-size: 80%; background-position: center; background-repeat: no-repeat; position: relative; }
@@ -471,14 +493,6 @@
         .mob-btn:active { background: rgba(255, 255, 255, 0.3); transform: scale(0.95); }
         .mob-big { width: 70px; height: 70px; font-size: 14px; background: rgba(255, 42, 42, 0.3); border-color: rgba(255, 42, 42, 0.6); }
 
-        /* Fullscreen btn */
-        #mobFullscreen {
-            position: absolute; top: 10px; right: 10px;
-            width: 40px; height: 40px; background: rgba(0,0,0,0.5); border: 1px solid #555;
-            border-radius: 6px; color: #fff; display: flex; justify-content: center; align-items: center;
-            pointer-events: auto; font-size: 20px;
-        }
-
         /* ORIENTATION WARNING */
         #orientationLock {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -503,7 +517,10 @@
 </head>
 <body>
 
- <!-- MOBILE CONTROLS (Solo visible en móvil) -->
+    <!-- GLOBAL FULLSCREEN BUTTON (PC HIDDEN, MOBILE VISIBLE) -->
+    <div id="globalFullscreenBtn" onclick="toggleFullScreen()">⛶ FULLSCREEN</div>
+
+    <!-- MOBILE CONTROLS (Solo visible en móvil) -->
     <div id="orientationLock">
         <svg fill="#fff" width="64px" height="64px" viewBox="0 0 24 24"><path d="M16.48 2.52c3.27 1.55 5.61 4.72 5.97 8.48h1.5C23.44 4.84 18.29 0 12 0l-1 .08v3.02h1c1.61 0 3.09.55 4.48 1.42zM19.48 13c-.36 3.76-2.7 6.93-5.97 8.48l-.03.02 1.49 1.49C16.11 21.55 17.6 21 19.48 13zM0 12c0 6.62 5.38 12 12 12h1v-3.02l-1 .02c-5.17 0-9.41-3.87-9.95-8.8H.05v-.2h2.03C2.59 7.07 6.83 3.2 12 3.2l1-.02V.18H12C5.38.18 0 5.54 0 12zM12 18l4-4-4-4v8z"/></svg>
         <div style="margin-top:20px;">PLEASE ROTATE DEVICE</div>
@@ -512,8 +529,6 @@
     <div id="mobileControls">
         <div id="joystickZone"><div id="stick"></div></div>
         
-        <div id="mobFullscreen" onclick="toggleFullScreen()">⛶</div>
-
         <div id="mobileActions">
             <!-- Arcade Skills Container (4 slots) -->
             <div id="mobArcadeSlots" class="arcade-mob-grid" style="display:none;">
@@ -1513,7 +1528,7 @@
         }, {passive: false}); 
 
         window.addEventListener('touchstart', e => { 
-            if(e.target.closest('.ab-slot, button, #loginOverlay, #resultOverlay, #skillChoiceOverlay, #exitGameBtn, #exitModal, .nav-btn, #mobileControls')) return; 
+            if(e.target.closest('.ab-slot, button, #loginOverlay, #resultOverlay, #skillChoiceOverlay, #exitGameBtn, #exitModal, .nav-btn, #mobileControls, #globalFullscreenBtn')) return; 
             
             // Skill Choice handling on Mobile (Arcade)
             if (isPickingSkill && currentGameMode !== 'classic') {

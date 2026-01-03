@@ -6,7 +6,7 @@
     <title>PillWars - The Crypto Arena</title>
     
     <!-- FAVICON -->
-    <link rel="icon" href="img/web.png">
+    <link rel="icon" href="/img/web.png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -336,14 +336,14 @@
         .count-badge { position: absolute; bottom: 1px; right: 1px; background: var(--accent); color: white; border-radius: 3px; padding: 0 3px; font-size: 8px; font-weight: bold; z-index: 5; }
         .gcd-badge { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; color: #fff; font-family: 'Russo One'; font-size: 16px; text-shadow: 0 0 5px #000; z-index: 10; pointer-events: none;}
         .skill-icon { width: 100%; height: 100%; background-size: 90%; background-position: center; background-repeat: no-repeat; opacity: 0.9; pointer-events: none; }
-        .icon-clon { background-image: url('img/clon.png'); background-color:#333; }
-        .icon-shot { background-image: url('img/shoot.png'); background-color:#333; }
-        .icon-sprint { background-image: url('img/sprint.png'); background-color:#333; }
-        .icon-tp { background-image: url('img/tp.png'); background-color:#333; }
-        .icon-magnet { background-image: url('img/iman.png'); background-color:#333; }
-        .icon-shield { background-image: url('img/inmune.png'); background-color:#333; }
-        .icon-big { background-image: url('img/big.png'); background-color:#333; }
-        .icon-random { background-image: url('img/random.png'); background-color:#333; }
+        .icon-clon { background-image: url('/img/clon.png'); background-color:#333; }
+        .icon-shot { background-image: url('/img/shoot.png'); background-color:#333; }
+        .icon-sprint { background-image: url('/img/sprint.png'); background-color:#333; }
+        .icon-tp { background-image: url('/img/tp.png'); background-color:#333; }
+        .icon-magnet { background-image: url('/img/iman.png'); background-color:#333; }
+        .icon-shield { background-image: url('/img/inmune.png'); background-color:#333; }
+        .icon-big { background-image: url('/img/big.png'); background-color:#333; }
+        .icon-random { background-image: url('/img/random.png'); background-color:#333; }
         .icon-empty { background-color: #111; }
         .cooldown-overlay { position: absolute; bottom: 0; left: 0; width: 100%; height: 0%; background: rgba(0,0,0,0.8); transition: height 0.1s linear; z-index: 2; pointer-events: none; }
         .active-overlay { position: absolute; bottom: 0; left: 0; width: 100%; height: 0%; background: rgba(0, 255, 136, 0.3); transition: height 0.1s linear; z-index: 2; pointer-events: none; }
@@ -689,7 +689,7 @@
                     </div>
                     
                     <div class="split-guide-box">
-                        <video id="guideVideo" class="split-video" src="video/Split.mp4" autoplay loop muted playsinline></video>
+                        <video id="guideVideo" class="split-video" src="/video/Split.mp4" autoplay loop muted playsinline></video>
                         <div class="split-explanation" id="guideText">
                             <span style="color:#00ffaa; font-weight:bold;">THE SPLIT (SPACE):</span>
                             <br>Essential for killing. You launch half your mass forward to eat enemies or escape. High risk, high reward. You can split into up to 16 pieces.
@@ -789,15 +789,15 @@
         muted: false, musicMuted: false,
         lastCdTime: 0, lastKillTime: 0, lastSplitTime: 0, lastSimpleHoverTime: 0, lastFloatKillTime: 0,
         sounds: { 
-            alert: new Audio('snd/alert.mp3'), cd: new Audio('snd/cd.mp3'), death: new Audio('snd/death.mp3'),
-            hover: new Audio('snd/hover.mp3'), iman: new Audio('snd/iman.mp3'), kill1: new Audio('snd/kill1.mp3'),
-            kill2: new Audio('snd/kill2.mp3'), select: new Audio('snd/select.mp3'), shield: new Audio('snd/shield.mp3'),
-            shoot: new Audio('snd/shoot.mp3'), simplehover: new Audio('snd/simplehover.mp3'), simpleselect: new Audio('snd/simpleselect.mp3'),
-            split: new Audio('snd/split.mp3'), sprint: new Audio('snd/sprint.mp3'), timer: new Audio('snd/timer.mp3'),
-            tp: new Audio('snd/tp.mp3'), big: new Audio('snd/big.mp3'), little: new Audio('snd/little.mp3'),
-            virus: new Audio('snd/virus.mp3'), floatkill: new Audio('snd/floatkill.mp3')
+            alert: new Audio('/snd/alert.mp3'), cd: new Audio('/snd/cd.mp3'), death: new Audio('/snd/death.mp3'),
+            hover: new Audio('/snd/hover.mp3'), iman: new Audio('/snd/iman.mp3'), kill1: new Audio('/snd/kill1.mp3'),
+            kill2: new Audio('/snd/kill2.mp3'), select: new Audio('/snd/select.mp3'), shield: new Audio('/snd/shield.mp3'),
+            shoot: new Audio('/snd/shoot.mp3'), simplehover: new Audio('/snd/simplehover.mp3'), simpleselect: new Audio('/snd/simpleselect.mp3'),
+            split: new Audio('/snd/split.mp3'), sprint: new Audio('/snd/sprint.mp3'), timer: new Audio('/snd/timer.mp3'),
+            tp: new Audio('/snd/tp.mp3'), big: new Audio('/snd/big.mp3'), little: new Audio('/snd/little.mp3'),
+            virus: new Audio('/snd/virus.mp3'), floatkill: new Audio('/snd/floatkill.mp3')
         },
-        music: new Audio('snd/music.mp3'), startTimer: null, 
+        music: new Audio('/snd/music.mp3'), startTimer: null, 
         init: function() {
             if(localStorage.getItem('pillwars_muted') === 'true') { this.muted = true; document.getElementById('soundToggle').classList.add('muted'); }
             this.music.loop = true; this.music.volume = MUSIC_VOLUME;
@@ -930,9 +930,9 @@
     let skillChoiceIndex = 0, isHoveringUI = false, ignoreNextHover = false, lastHoveredMode = null;
     let currentGuideIndex = 0;
     const guideSlides = [
-        { video: 'video/Split.mp4', title: 'THE SPLIT (SPACE):', desc: 'Essential for killing. You launch half your mass forward to eat enemies. High risk, high reward. You can split into up to 16 pieces.' },
-        { video: 'video/Virus.mp4', title: 'VIRUS FARMING:', desc: 'Touching a virus splits you into three pieces, but grants a mass bonus. You can use viruses to grow faster, at the risk of becoming too divided. and more vulnerable.' },
-        { video: 'video/Viral.mp4', title: 'COMBAT MECHANICS:', desc: 'Use SHOOT (1) to hit viruses from a distance. The first shot corrupts a virus, turning it purple. Shoot it again to trigger an explosive projectile. that damages nearby players. Keep moving to avoid incoming fire.' }
+        { video: '/video/Split.mp4', title: 'THE SPLIT (SPACE):', desc: 'Essential for killing. You launch half your mass forward to eat enemies. High risk, high reward. You can split into up to 16 pieces.' },
+        { video: '/video/Virus.mp4', title: 'VIRUS FARMING:', desc: 'Touching a virus splits you into three pieces, but grants a mass bonus. You can use viruses to grow faster, at the risk of becoming too divided. and more vulnerable.' },
+        { video: '/video/Viral.mp4', title: 'COMBAT MECHANICS:', desc: 'Use SHOOT (1) to hit viruses from a distance. The first shot corrupts a virus, turning it purple. Shoot it again to trigger an explosive projectile. that damages nearby players. Keep moving to avoid incoming fire.' }
     ];
 
     function nextGuide(e) {
@@ -951,14 +951,14 @@
     }
 
     const SKILL_DESCRIPTIONS = {
-        1: { name: "CLON", desc: "THE FARMER. Shoots a mass projectile. IMPORTANT: If it hits a VIRUS, it clones it and grants you a NEW SKILL card. Cooldown: 1s.", video: "video/Clon.mp4", icon: "img/clon.png" },
-        2: { name: "SHOOT", desc: "OFFENSIVE. Fires mass projectiles to damage enemies or push viruses. Does not grant skills. Cost: 2500 Mass.", video: "video/Shoot.mp4", icon: "img/shoot.png" },
-        3: { name: "SPRINT", desc: "MOBILITY. Boosts movement speed by 50% for 10 seconds. Great for chasing or escaping. Passive effect: Gold aura.", video: "video/Sprint.mp4", icon: "img/sprint.png" },
-        4: { name: "TELEPORT", desc: "EVASION. Instantly teleports all your cells to a random safe location near your center. Use to dodge attacks.", video: "video/Tp.mp4", icon: "img/tp.png" },
-        5: { name: "MAGNET", desc: "UTILITY. Automatically pulls nearby food pellets towards your cells for 8 seconds. Radius: 200px.", video: "video/Magnet.mp4", icon: "img/iman.png" },
-        6: { name: "SHIELD", desc: "DEFENSE. Grants total immunity to viruses and being eaten by larger players for 3 seconds. Visual: Purple forcefield.", video: "video/Inmune.mp4", icon: "img/inmune.png" },
-        7: { name: "PLUS", desc: "GROWTH. Instantly grants a large amount of mass (5k - 12k) distributed among your cells.", video: "video/Plus.mp4", icon: "img/big.png" },
-        8: { name: "GAMBLE", desc: "RISK. 50% chance to gain 15,000 Mass (JACKPOT). 50% chance to lose 5,000 Mass. Do you feel lucky?", video: "video/Gamble.mp4", icon: "img/random.png" }
+        1: { name: "CLON", desc: "THE FARMER. Shoots a mass projectile. IMPORTANT: If it hits a VIRUS, it clones it and grants you a NEW SKILL card. Cooldown: 1s.", video: "/video/Clon.mp4", icon: "/img/clon.png" },
+        2: { name: "SHOOT", desc: "OFFENSIVE. Fires mass projectiles to damage enemies or push viruses. Does not grant skills. Cost: 2500 Mass.", video: "/video/Shoot.mp4", icon: "/img/shoot.png" },
+        3: { name: "SPRINT", desc: "MOBILITY. Boosts movement speed by 50% for 10 seconds. Great for chasing or escaping. Passive effect: Gold aura.", video: "/video/Sprint.mp4", icon: "/img/sprint.png" },
+        4: { name: "TELEPORT", desc: "EVASION. Instantly teleports all your cells to a random safe location near your center. Use to dodge attacks.", video: "video/Tp.mp4", icon: "/img/tp.png" },
+        5: { name: "MAGNET", desc: "UTILITY. Automatically pulls nearby food pellets towards your cells for 8 seconds. Radius: 200px.", video: "/video/Magnet.mp4", icon: "/img/iman.png" },
+        6: { name: "SHIELD", desc: "DEFENSE. Grants total immunity to viruses and being eaten by larger players for 3 seconds. Visual: Purple forcefield.", video: "/video/Inmune.mp4", icon: "/img/inmune.png" },
+        7: { name: "PLUS", desc: "GROWTH. Instantly grants a large amount of mass (5k - 12k) distributed among your cells.", video: "/video/Plus.mp4", icon: "/img/big.png" },
+        8: { name: "GAMBLE", desc: "RISK. 50% chance to gain 15,000 Mass (JACKPOT). 50% chance to lose 5,000 Mass. Do you feel lucky?", video: "/video/Gamble.mp4", icon: "/img/random.png" }
     };
 
     const TooltipManager = {
@@ -1574,7 +1574,7 @@
         let gcdText = globalCDTimer > 0 ? (globalCDTimer/1000).toFixed(1) : ""; for(let i=1; i<=10; i++) { if(uiGcds[i]) uiGcds[i].innerText = gcdText; }
         
         let activeBuffs = []; if (skills[3].active > 0) activeBuffs.push({id: 3, time: skills[3].active}); if (skills[5].active > 0) activeBuffs.push({id: 5, time: skills[5].active}); if (skills[6].active > 0) activeBuffs.push({id: 6, time: skills[6].active});
-        if(activeBuffs.length > 0) { els.buffTable.style.display = 'block'; let buffHtml = ""; const buffImages = { 3: 'img/sprint.png', 5: 'img/iman.png', 6: 'img/inmune.png' }; activeBuffs.forEach(buff => { let seconds = Math.ceil(buff.time / 1000); let imgSrc = buffImages[buff.id] || ''; buffHtml += `<div class="buff-row"><img src="${imgSrc}" class="buff-icon-img" onerror="this.style.display='none'"><span class="buff-time">${seconds}s</span></div>`; }); els.buffList.innerHTML = buffHtml; } else { els.buffTable.style.display = 'none'; }
+        if(activeBuffs.length > 0) { els.buffTable.style.display = 'block'; let buffHtml = ""; const buffImages = { 3: '/img/sprint.png', 5: '/img/iman.png', 6: '/img/inmune.png' }; activeBuffs.forEach(buff => { let seconds = Math.ceil(buff.time / 1000); let imgSrc = buffImages[buff.id] || ''; buffHtml += `<div class="buff-row"><img src="${imgSrc}" class="buff-icon-img" onerror="this.style.display='none'"><span class="buff-time">${seconds}s</span></div>`; }); els.buffList.innerHTML = buffHtml; } else { els.buffTable.style.display = 'none'; }
 
         let roomKey = currentGameMode + '_' + currentServer;
         if (currentGameMode === 'arcade' || currentGameMode === 'skills') { 

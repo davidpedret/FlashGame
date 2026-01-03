@@ -22,6 +22,7 @@
             --bg-dark: #050505; 
             --glass-bg: rgba(20, 20, 20, 0.6); 
             --glass-border: rgba(255, 255, 255, 0.1);
+            --navbar-height: 80px; /* Variable para controlar altura */
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
@@ -44,7 +45,7 @@
             border: 2px solid #000; border-radius: 20px; pointer-events: none; z-index: 100000;
             transform: translate(-50%, -50%) rotate(-30deg); box-shadow: 0 0 15px var(--primary);
             will-change: transform, top, left; transition: opacity 0.1s ease; opacity: 1; 
-            display: none; /* Oculto por defecto, JS lo activa si no es táctil */
+            display: none; 
         }
         #custom-cursor.clicking { transform: translate(-50%, -50%) rotate(-30deg) scale(0.9); filter: brightness(1.3); }
 
@@ -55,13 +56,13 @@
 
         /* --- NAVBAR --- */
         .navbar {
-            display: flex; align-items: center; height: 80px; background: rgba(0, 0, 0, 0.95); 
+            display: flex; align-items: center; height: var(--navbar-height); background: rgba(0, 0, 0, 0.95); 
             backdrop-filter: blur(10px); border-bottom: 1px solid rgba(0, 255, 136, 0.2);
             padding: 0 30px; position: fixed; top: 0; width: 100%; z-index: 1000;
-            justify-content: space-between;
+            justify-content: space-between; transition: all 0.3s ease;
         }
         .nav-left { display: flex; align-items: center; gap: 40px; }
-        .brand-container { display: flex; align-items: center; gap: 10px; }
+        .brand-container { display: flex; align-items: center; gap: 10px; text-decoration: none; }
         .logo-pill {
             width: 26px; height: 46px; border-radius: 99px;
             background: linear-gradient(180deg, #fff 50%, var(--primary) 50%);
@@ -74,7 +75,7 @@
             text-transform: uppercase; font-weight: 900; border: none;
             clip-path: polygon(0 0, 100% 0, 100% 70%, 90% 100%, 0 100%);
             transition: 0.2s; letter-spacing: 1px; box-shadow: 0 0 15px rgba(255, 42, 42, 0.4);
-            white-space: nowrap;
+            white-space: nowrap; cursor: pointer !important;
         }
         .btn-play:hover { transform: scale(1.05); filter: brightness(1.2); }
 
@@ -110,9 +111,9 @@
 
         /* --- TICKER --- */
         .ticker-wrap {
-            position: fixed; top: 80px; width: 100%; height: 30px; background: rgba(0,0,0,0.6);
+            position: fixed; top: var(--navbar-height); width: 100%; height: 30px; background: rgba(0,0,0,0.6);
             backdrop-filter: blur(3px); border-bottom: 1px solid rgba(255,255,255,0.05); 
-            overflow: hidden; z-index: 900; display: flex; align-items: center;
+            overflow: hidden; z-index: 900; display: flex; align-items: center; transition: top 0.3s ease;
         }
         .ticker { display: flex; animation: ticker 40s linear infinite; white-space: nowrap; }
         .ticker-item { padding: 0 30px; font-size: 12px; font-weight: 600; color: #888; text-transform: uppercase; display: flex; align-items: center; gap: 10px; }
@@ -121,7 +122,7 @@
         /* HERO */
         .hero-video-wrapper { position: relative; width: 100%; height: 100vh; min-height: 500px; display: flex; align-items: center; justify-content: center; overflow: hidden; border-bottom: 1px solid var(--primary); }
         .hero-video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1; filter: brightness(0.5); }
-        .hero-main-content { z-index: 2; text-align: center; padding: 0 20px; }
+        .hero-main-content { z-index: 2; text-align: center; padding: 0 20px; margin-top: 60px; }
         .big-title { font-size: 90px; font-family: 'Russo One'; color: #fff; text-shadow: 0 0 30px var(--primary); margin: 0; line-height: 1; }
         .big-subtitle { font-size: 24px; color: var(--primary); font-weight: 800; text-transform: uppercase; letter-spacing: 8px; margin-top: 10px; }
 
@@ -159,36 +160,17 @@
         .feature-text p { color: #888; line-height: 1.6; font-size: 16px; margin-bottom: 15px; }
         .feature-images { flex: 1; display: flex; gap: 15px; width: 100%; justify-content: center; }
 
-        /* ESTILO PARA LOS VIDEOS */
         .video-card { 
-            background: #000; 
-            border: 1px solid #222; 
-            border-radius: 12px; 
-            width: 100%; 
-            aspect-ratio: 16/9; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            overflow: hidden;
-            transition: 0.3s ease; 
+            background: #000; border: 1px solid #222; border-radius: 12px; 
+            width: 100%; aspect-ratio: 16/9; display: flex; align-items: center; 
+            justify-content: center; overflow: hidden; transition: 0.3s ease; 
         }
-        .video-card:hover { 
-            border-color: var(--primary); 
-            background: #111; 
-            box-shadow: 0 0 20px rgba(0,255,136,0.1); 
-        }
-        .video-card video { 
-            width: 100%; 
-            height: 100%; 
-            object-fit: cover; 
-        }
+        .video-card:hover { border-color: var(--primary); background: #111; box-shadow: 0 0 20px rgba(0,255,136,0.1); }
+        .video-card video { width: 100%; height: 100%; object-fit: cover; }
 
-        /* BATTLE MODES */
         .battle-modes-container {
-            border: 2px solid var(--primary); 
-            background: rgba(15, 15, 15, 0.3); 
-            border-radius: 24px;
-            padding: 60px; text-align: center; margin: 80px 0; width: 100%; max-width: 1200px;
+            border: 2px solid var(--primary); background: rgba(15, 15, 15, 0.3); 
+            border-radius: 24px; padding: 60px; text-align: center; margin: 80px 0; width: 100%; max-width: 1200px;
             backdrop-filter: blur(2px);
         }
         .battle-modes-container h2 { font-family: 'Russo One'; font-size: 56px; color: #fff; margin: 0; text-transform: uppercase; }
@@ -205,7 +187,6 @@
         .mode-card h4 { font-family: 'Russo One'; font-size: 30px; color: #fff; margin: 10px 0; }
         .mode-card p { color: #aaa; font-size: 15px; line-height: 1.6; }
 
-        /* CONTRATO */
         .ca-box {
             background: #000; border: 1px solid #333; padding: 18px 30px; border-radius: 8px;
             display: inline-flex; align-items: center; gap: 15px; 
@@ -224,12 +205,10 @@
             display: flex; flex-direction: column; align-items: center; justify-content: center; transition: 0.2s;
             position: relative; 
         }
-        .skill-card:hover { 
-            border-color: var(--gold); 
-            background: #222; 
+        .skill-card:hover, .skill-card.active-mobile { 
+            border-color: var(--gold); background: #222; 
             box-shadow: 0 0 25px rgba(255, 204, 0, 0.6); 
-            transform: scale(1.1); 
-            z-index: 10;
+            transform: scale(1.1); z-index: 10;
         }
         
         .skill-icon { width: 40px; height: 40px; margin-bottom: 12px; }
@@ -269,19 +248,12 @@
         .mode-arcade-tag { color: #ccff00; }
         .mode-classic-tag { color: #00ffaa; }
 
-        /* DOMINATE THE LOBBY VIDEO CONTAINER */
         .full-width-img { 
-            width: 100%; max-width: 1000px; 
-            border: 1px solid var(--primary); border-radius: 12px; 
-            overflow: hidden; margin: 30px auto; 
-            background: #000;
+            width: 100%; max-width: 1000px; border: 1px solid var(--primary); border-radius: 12px; 
+            overflow: hidden; margin: 30px auto; background: #000;
         }
-        .full-width-img video { 
-            width: 100%; display: block; object-fit: cover; 
-            transition: opacity 0.3s;
-        }
+        .full-width-img video { width: 100%; display: block; object-fit: cover; transition: opacity 0.3s; }
 
-        /* SECCIONES INFERIORES */
         .section-container { padding: 100px 20px; border-top: 1px solid #222; display: flex; flex-direction: column; align-items: center; position: relative; }
         #quest { background: radial-gradient(circle at top, #0a1a0a, #000); }
         #shop { background: linear-gradient(180deg, #020202 0%, #150515 100%); }
@@ -299,7 +271,6 @@
         .reveal { opacity: 0; transform: translateY(30px); transition: 0.8s ease-out; }
         .reveal.active { opacity: 1; transform: translateY(0); }
 
-        /* --- MODAL DE WALLET --- */
         .modal-overlay { 
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(5px); z-index: 10001; 
@@ -323,72 +294,62 @@
         .wallet-option img { width: 32px; height: 32px; border-radius: 8px; object-fit: cover; }
         .wallet-option span { font-weight: 700; color: #e0e0e0; font-size: 15px; }
 
-        /* --- MOBILE OPTIMIZATIONS --- */
+        /* --- MOBILE OPTIMIZATIONS FIXED --- */
         @media (max-width: 768px) {
+            :root { --navbar-height: auto; } /* Altura automática en móvil */
             body { cursor: auto !important; }
             #custom-cursor { display: none !important; }
+            
             .navbar { 
-                height: auto; 
                 flex-direction: column; 
-                padding: 15px; 
+                padding: 15px 20px; 
                 gap: 15px; 
-                align-items: stretch;
+                position: fixed; 
             }
+            
             .nav-left { 
                 flex-direction: column; 
-                align-items: stretch; 
+                align-items: center; 
                 width: 100%; 
                 gap: 15px;
             }
-            .brand-container {
-                justify-content: center;
-                margin-bottom: 5px;
-            }
-            .btn-play {
-                width: 100%;
-                text-align: center;
-                order: 2; /* Move button below brand */
-            }
+            
+            /* Fila superior: Logo y Botón Play */
+            .brand-container { justify-content: center; margin-bottom: 0; }
+            .btn-play { width: 100%; text-align: center; }
+
+            /* Menú de links scrollable */
             .nav-links-container {
-                width: 100%;
-                margin: 0;
-                order: 3;
-                overflow-x: auto; /* Scrollable horizontal links */
-                white-space: nowrap;
-                padding-bottom: 10px;
-                gap: 20px;
+                width: 100%; margin: 0;
+                overflow-x: auto; white-space: nowrap;
+                padding-bottom: 5px; gap: 20px;
                 justify-content: flex-start;
-                -ms-overflow-style: none;  /* IE and Edge */
-                scrollbar-width: none;  /* Firefox */
+                scrollbar-width: none; /* Firefox */
             }
             .nav-links-container::-webkit-scrollbar { display: none; }
 
-            .nav-dropdown-group { 
-                justify-content: space-between; 
-                width: 100%;
-                order: 4;
-            }
-            .dropbtn span { display: none; } /* Hide token name on very small screens if needed */
+            /* Wallet y Socials al final */
+            .nav-dropdown-group { justify-content: space-between; width: 100%; }
+            .dropbtn span { display: none; } 
             .dropbtn { font-size: 12px; }
             .btn-connect { padding: 8px 12px; font-size: 11px; }
 
-            .ticker-wrap { top: 220px; /* Adjust based on navbar height */ } 
+            /* Ticker justo debajo de la navbar (calculo aprox: navbar movil es ~180px) */
+            .ticker-wrap { position: fixed; top: 190px; z-index: 900; } 
             
-            /* RE-ADJUST CONTENT PADDING FOR TALL NAVBAR */
-            .hero-video-wrapper { padding-top: 200px; min-height: 100vh; }
+            /* Ajuste de Hero para que no quede tapado */
+            .hero-video-wrapper { padding-top: 0; height: 100vh; }
+            .hero-main-content { margin-top: 0; }
             
             .big-title { font-size: 48px; }
             .big-subtitle { font-size: 16px; letter-spacing: 4px; }
             
-            .main-layout { flex-direction: column; }
+            .main-layout { flex-direction: column; margin-top: 150px; } /* Margen extra para separar del ticker */
             .trailer-box { aspect-ratio: 16/9; width: 100%; }
             .side-widget { width: 100%; }
             
-            /* FORCE STACKING FOR FEATURES */
             .feature-block, .feature-block.reverse { 
-                flex-direction: column-reverse; /* Text on top/bottom consistency */
-                padding: 30px; 
-                gap: 20px;
+                flex-direction: column-reverse; padding: 30px; gap: 20px;
             }
             .feature-text { text-align: center; }
             .feature-text h3 { font-size: 28px; }
@@ -399,13 +360,8 @@
             .modes-grid { flex-direction: column; }
             
             .skills-section h2 { font-size: 28px; }
-            
             .section-title { font-size: 32px; }
             .section-container { padding: 60px 20px; }
-            
-            /* FIX TICKER POSITION DYNAMICALLY WITH JS OR MARGIN */
-            .ticker-wrap { position: relative; top: 0; margin-top: 230px; } 
-            .hero-video-wrapper { padding-top: 0; }
         }
     </style>
 </head>
@@ -416,7 +372,10 @@
     <!-- NAVBAR -->
     <nav class="navbar" id="main-navbar">
         <div class="nav-left">
-            <div class="brand-container"><div class="logo-pill"></div><span class="brand-name">PILLWARS</span></div>
+            <div class="brand-container">
+                <div class="logo-pill"></div>
+                <span class="brand-name">PILLWARS</span>
+            </div>
             <!-- CAMBIO 1: REDIRECCIÓN A CARPETA GAME/ -->
             <button class="btn-play" onclick="window.location.href='game/'">PLAY NOW</button>
             
@@ -447,7 +406,7 @@
     </nav>
 
     <!-- TICKER -->
-    <div class="ticker-wrap"><div class="ticker"><div class="ticker-item">Loading Market Data...</div></div></div>
+    <div class="ticker-wrap" id="ticker-wrap"><div class="ticker"><div class="ticker-item">Loading Market Data...</div></div></div>
 
     <!-- HERO -->
     <div class="hero-video-wrapper" id="hero">
@@ -559,6 +518,7 @@
             <h2 style="font-family:'Russo One'; font-size: 40px; text-transform: uppercase;">THE SKILL ARSENAL</h2>
             
             <div class="skills-grid" id="skills-grid-container">
+                <!-- Se añade onclick para móvil -->
                 <div class="skill-card" onmouseenter="App.UI.showSkill(event, 'shoot')" onclick="App.UI.toggleSkillMobile(event, 'shoot')" onmouseleave="App.UI.hideSkill()">
                     <img src="img/shoot.png" class="skill-icon"><div class="skill-name">SHOT</div>
                 </div>
@@ -658,6 +618,8 @@
             footer: document.getElementById('main-footer'),
             balanceDisplay: document.getElementById('user-balance-display'),
             ticker: document.querySelector('.ticker'),
+            tickerWrap: document.getElementById('ticker-wrap'),
+            navbar: document.getElementById('main-navbar'),
             widgetMcap: document.getElementById('widget-mcap'),
             widgetVol: document.getElementById('widget-vol'), 
             priceBtn: document.getElementById('price-btn'),
@@ -688,6 +650,8 @@
             isTouch: false,
 
             UI: {
+                activeSkill: null, // Para rastrear skill abierta en movil
+
                 init: () => {
                     // DETECT TOUCH
                     App.isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
@@ -697,12 +661,27 @@
                         DOM.cursor.style.display = 'block';
                     }
 
+                    // Ajuste dinamico del ticker en movil
+                    if(App.isTouch && window.innerWidth <= 768) {
+                        const navHeight = DOM.navbar.offsetHeight;
+                        DOM.tickerWrap.style.top = navHeight + 'px';
+                    }
+
                     App.UI.setupScroll();
                     App.UI.setupVideoHover(); 
+                    
                     window.onclick = (e) => { 
                         if (e.target == DOM.walletModal) App.Wallet.closeModal(); 
-                        // Cierra tooltip al hacer click fuera en movil
-                        if (App.isTouch && !e.target.closest('.skill-card')) App.UI.hideSkill();
+                        
+                        // CIERRA TOOLTIP AL TOCAR FUERA (SOLO MOVIL)
+                        if (App.isTouch && App.UI.activeSkill) {
+                            if (!e.target.closest('.skill-card') && !e.target.closest('.skill-tooltip')) {
+                                App.UI.hideSkill();
+                                App.UI.activeSkill = null;
+                                // Remover clase activa de cards
+                                document.querySelectorAll('.skill-card').forEach(c => c.classList.remove('active-mobile'));
+                            }
+                        }
                     };
                 },
                 setupCursor: () => {
@@ -774,10 +753,27 @@
                     if (App.isTouch) return; // En movil usamos click
                     App.UI.renderTooltip(e, key);
                 },
+                
+                // NUEVA LOGICA DE TOGGLE PARA MOVIL
                 toggleSkillMobile: (e, key) => {
                     if (!App.isTouch) return;
+                    
+                    // Si tocamos el mismo que ya esta abierto -> CERRAR
+                    if (App.UI.activeSkill === key) {
+                        App.UI.hideSkill();
+                        App.UI.activeSkill = null;
+                        e.currentTarget.classList.remove('active-mobile');
+                        return;
+                    }
+
+                    // Si tocamos uno nuevo -> ABRIR (y cerrar anterior visualmente)
+                    document.querySelectorAll('.skill-card').forEach(c => c.classList.remove('active-mobile'));
+                    e.currentTarget.classList.add('active-mobile');
+                    
+                    App.UI.activeSkill = key;
                     App.UI.renderTooltip(e, key);
                 },
+
                 renderTooltip: (e, key) => {
                     const data = SKILL_DB[key];
                     if (!data) return;
@@ -813,8 +809,7 @@
                     DOM.tooltip.style.display = 'flex';
                 },
                 hideSkill: () => {
-                    // En desktop ocultar siempre, en movil solo si se llama explicitamente
-                    if (!App.isTouch) DOM.tooltip.style.display = 'none';
+                    DOM.tooltip.style.display = 'none';
                 }
             },
 

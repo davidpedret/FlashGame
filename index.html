@@ -62,10 +62,7 @@
             justify-content: space-between; transition: all 0.3s ease;
         }
         .nav-left { display: flex; align-items: center; gap: 40px; }
-        
-        /* CAMBIO: OCULTAMOS EL LOGO Y MARCA */
-        .brand-container { display: none !important; } 
-        
+        .brand-container { display: flex; align-items: center; gap: 10px; text-decoration: none; }
         .logo-pill {
             width: 26px; height: 46px; border-radius: 99px;
             background: linear-gradient(180deg, #fff 50%, var(--primary) 50%);
@@ -73,9 +70,9 @@
         }
         .brand-name { font-family: 'Russo One'; font-size: 32px; color: #fff; text-transform: uppercase; letter-spacing: 2px; }
 
-        /* CAMBIO: quitamos margin-left: 20px porque ya no hay logo a la izquierda */
+        /* Contenedor de links y botón */
         .nav-links-container { 
-            display: flex; gap: 30px; margin-left: 0; align-items: center; 
+            display: flex; gap: 30px; margin-left: 20px; align-items: center; 
         }
 
         .btn-play {
@@ -321,8 +318,8 @@
                 gap: 10px;
             }
             
-            /* Logo ya no se muestra, pero mantenemos esto por si acaso */
-            .brand-container { justify-content: center; margin-bottom: 5px; }
+            /* --- LOGO Y TITULO OCULTOS EN MÓVIL --- */
+            .brand-container { display: none !important; }
 
             /* CONTENEDOR DE ENLACES + BOTÓN PLAY EN LA MISMA FILA SCROLLABLE */
             .nav-links-container {
@@ -356,8 +353,8 @@
             .dropbtn { font-size: 12px; }
             .btn-connect { padding: 6px 12px; font-size: 10px; }
 
-            /* Ticker ajustado */
-            .ticker-wrap { position: fixed; top: 160px; z-index: 900; } 
+            /* Ticker ajustado (más arriba porque ya no está el logo) */
+            .ticker-wrap { position: fixed; top: 110px; z-index: 900; } 
             
             /* Ajuste de Hero */
             .hero-video-wrapper { padding-top: 0; height: 100vh; }
@@ -366,7 +363,7 @@
             .big-title { font-size: 48px; }
             .big-subtitle { font-size: 16px; letter-spacing: 4px; }
             
-            .main-layout { flex-direction: column; margin-top: 150px; }
+            .main-layout { flex-direction: column; margin-top: 100px; } /* Menos margen top */
             .trailer-box { aspect-ratio: 16/9; width: 100%; }
             .side-widget { width: 100%; }
             
@@ -394,7 +391,6 @@
     <!-- NAVBAR -->
     <nav class="navbar" id="main-navbar">
         <div class="nav-left">
-            <!-- LOGO OCULTO VIA CSS (display:none) -->
             <div class="brand-container">
                 <div class="logo-pill"></div>
                 <span class="brand-name">PILLWARS</span>

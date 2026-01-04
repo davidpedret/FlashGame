@@ -1874,7 +1874,7 @@
         all.sort((a,b) => b.mass - a.mass);
         
         let html = "";
-        for (let i=0; i<Math.min(5, all.length); i++) {
+        for (let i=0; i<Math.min(10, all.length); i++) {
             let p = all[i];
             let displayMass = SHOW_MASS_AS_SCORE ? Math.floor(p.mass) : Math.floor(Math.sqrt(p.mass/Math.PI));
             let cls = p.isMe ? "lb-item is-me" : "lb-item";

@@ -663,7 +663,7 @@
         };
 
         const App = {
-            Config: { Token: "777oHV1fPsv6m2vHDGBsJefKXhV4WA9m3LDqUdY5wiX2", RPC: "https://api.mainnet-beta.solana.com" },
+            Config: { Token: "777oHV1fPsv6m2vHDGBsJefKXhV4WA9m3LDqUdY5wiX2", RPC: "https://rpc.ankr.com/solana" },
             isTouch: false,
 
             UI: {
@@ -867,21 +867,59 @@
             },
 
             Market: {
+                // --- PEGA ESTO SUSTITUYENDO LA FUNCION ANTERIOR ---
                 fetchBalance: async (wallet) => {
-                    DOM.balanceDisplay.innerText = "Loading...";
+                    DOM.balanceDisplay.innerText = "Scanning...";
                     DOM.balanceDisplay.style.display = 'inline-block';
+                    
+                    console.log("Conectando a RPC:", App.Config.RPC);
+
                     try {
                         const res = await fetch(App.Config.RPC, {
-                            method: 'POST', headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "getTokenAccountsByOwner", params: [wallet, { mint: App.Config.Token }, { encoding: "jsonParsed" }] })
+                            method: 'POST', 
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ 
+                                jsonrpc: "2.0", 
+                                id: 1, 
+                                method: "getTokenAccountsByOwner", 
+                                params: [
+                                    wallet, 
+                                    { mint: App.Config.Token }, 
+                                    { encoding: "jsonParsed" }
+                                ] 
+                            })
                         });
+                        
                         const data = await res.json();
-                        const amount = (data.result && data.result.value.length > 0) ? 
-                            parseFloat(data.result.value[0].account.data.parsed.info.tokenAmount.uiAmountString).toLocaleString('en-US', {maximumFractionDigits: 0}) : "0";
+                        
+                        // Si hay error en la respuesta del RPC
+                        if (data.error) {
+                            console.error("Error RPC:", data.error);
+                            DOM.balanceDisplay.innerText = "RPC Error";
+                            return;
+                        }
+
+                        // Si la wallet no tiene cuentas de ese token (Saldo 0 real)
+                        if (!data.result || !data.result.value || data.result.value.length === 0) {
+                            console.log("La wallet no tiene el token creado (Saldo 0)");
+                            DOM.balanceDisplay.innerText = "0 $PILL";
+                            return;
+                        }
+
+                        // Si tiene saldo, lo sacamos
+                        const amount = parseFloat(data.result.value[0].account.data.parsed.info.tokenAmount.uiAmountString).toLocaleString('en-US', {maximumFractionDigits: 0});
+                        console.log("Saldo encontrado:", amount);
                         DOM.balanceDisplay.innerText = `${amount} $PILL`;
-                    } catch (e) { DOM.balanceDisplay.innerText = "Error"; }
+
+                    } catch (e) { 
+                        console.error("Error de conexión:", e);
+                        DOM.balanceDisplay.innerText = "Net Err"; 
+                    }
                 },
+                // --------------------------------------------------
+
                 updateTicker: async () => {
+                    // ... el resto de tu código updateTicker sigue aquí igual ...
                     try {
                         const res = await fetch(`https://api.dexscreener.com/latest/dex/tokens/${App.Config.Token}`);
                         const data = await res.json();

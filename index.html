@@ -183,10 +183,27 @@
         .trailer-box.active .trailer-hint { opacity: 0; }
 
         .trailer-backdrop {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); z-index: 10001; backdrop-filter: blur(10px);
-        }
-        .trailer-backdrop.active { display: block; }
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 10001;
+    background: rgba(0,0,0,0.9);
+       }
+
+/* el blur se aplica en un pseudo-elemento, no en el contenedor */
+        .trailer-backdrop::before {
+       content: "";
+       position: absolute;
+       inset: 0;
+
+       backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+
+    pointer-events: none;
+       }
+
+       .trailer-backdrop.active { display: block; }
+
         /* ------------------------------------- */
 
         .side-widget { flex: 1; min-width: 280px; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 12px; padding: 25px; display: flex; flex-direction: column; gap: 20px; backdrop-filter: blur(10px); width: 100%; }

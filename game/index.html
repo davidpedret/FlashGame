@@ -1193,13 +1193,13 @@
             
             // CORRECCIÓN VIBRACIÓN BOTS
             let dist = Math.sqrt(dx*dx + dy*dy); 
-            
-            // Si está a menos de 5px, se para para evitar vibración.
+            // Aumentamos el margen de 0.001 a 5. Si está a menos de 5px, se para.
             if (dist > 5) { 
                 this.vx = (dx / dist) * speedMult; 
                 this.vy = (dy / dist) * speedMult; 
 
-                // Suavizado extra cuando se acerca al objetivo
+                // Suavizado extra: si está muy cerca del objetivo (menos del radio), reducir velocidad
+                // Esto hace que "aparquen" suavemente en lugar de frenar en seco o vibrar
                 if (dist < 40) {
                     let brake = dist / 40;
                     this.vx *= brake;

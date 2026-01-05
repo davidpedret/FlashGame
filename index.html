@@ -52,7 +52,10 @@
         /* ZONAS SEGURAS (CURSOR NATIVO) */
         .navbar, .navbar *, footer, footer *, .modal-overlay, .modal-box, .modal-box * { cursor: default !important; }
         .navbar a, .navbar button, .wallet-option, footer a, .modal-close { cursor: pointer !important; }
-        .btn-play, .ca-box, .skill-card, .video-card, .full-width-img, .trailer-box { cursor: none; }
+        /* El trailer box ahora tiene cursor pointer manejado abajo */
+        .btn-play, .ca-box, .skill-card, .video-card, .full-width-img { cursor: none; }
+        /* Excepcion para trailer cuando esta activo para usar controles */
+        .trailer-box.active { cursor: default !important; }
 
         /* --- NAVBAR --- */
         .navbar {
@@ -140,6 +143,7 @@
             position: relative; cursor: pointer;
             transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             z-index: 10; overflow: hidden;
+            transform: translateZ(0); /* Evita blur en transiciones */
         }
 
         .trailer-box video {
@@ -151,7 +155,6 @@
         .trailer-hint {
             position: absolute; 
             bottom: 20px; /* PEGADO ABAJO */
-            top: auto;
             left: 50%; transform: translateX(-50%);
             z-index: 20; pointer-events: none;
             border: 1px solid rgba(255,255,255,0.3); padding: 10px 20px;
@@ -164,17 +167,18 @@
         .trailer-box:hover video { opacity: 1; }
         .trailer-box:hover { border-color: var(--primary); box-shadow: 0 0 30px rgba(0,255,136,0.2); }
 
-        /* TRAILER ACTIVE (SOLUCION OSCURIDAD) */
+        /* TRAILER ACTIVE (SOLUCION NITIDEZ) */
         .trailer-box.active {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
             width: 80vw; max-width: 1000px; aspect-ratio: 16/9; height: auto;
-            z-index: 10005 !important; /* MUCHO MAS ALTO QUE EL BACKDROP */
+            z-index: 10005 !important; /* Capa mas alta */
             border: 2px solid var(--primary);
             box-shadow: 0 0 100px rgba(0,255,136,0.5);
             background: #000;
         }
         .trailer-box.active video { 
-            opacity: 1 !important; /* FORZAR OPACIDAD AL 100% */
+            opacity: 1 !important; /* Nitidez total */
+            filter: none !important;
         }
         .trailer-box.active .trailer-hint { opacity: 0; }
 
@@ -490,7 +494,7 @@
         
         <div class="main-layout">
             
-            <!-- TRAILER BOX CON FUNCIONALIDAD CINE (CORREGIDO "Trailer.mp4") -->
+            <!-- TRAILER BOX MEJORADO -->
             <div class="trailer-box" id="main-trailer" onclick="toggleTrailerMode()">
                 <div class="trailer-hint">
                     <span>🔊 TAP TO EXPAND & UNMUTE</span>
@@ -512,7 +516,7 @@
             <p style="max-width: 900px; margin: 0 auto; color: #888; line-height: 1.6; font-size: 18px;">PillWars brings back the addictive chaos of classic browser games like Agar.io. Enter the arena, devour smaller pills, and grow your mass to dominate the map. But size isn't everything; master your special abilities to outsmart your opponents. Learn more below:</p>
         </div>
 
-        <!-- SECCION 1 (SPLIT) -->
+        <!-- SECCION 1 (SPLIT) - AUTOPLAY ACTIVADO -->
         <div class="feature-block reveal">
             <div class="feature-text">
                 <span class="category-tag">CORE MECHANICS</span>
@@ -521,7 +525,7 @@
             </div>
             <div class="feature-images">
                 <div class="video-card">
-                    <video muted loop playsinline>
+                    <video autoplay muted loop playsinline>
                         <source src="video/Split.mp4" type="video/mp4">
                         Your browser does not support the video tag.
                     </video>
@@ -529,7 +533,7 @@
             </div>
         </div>
 
-        <!-- SECCION 2 (VIRUS) -->
+        <!-- SECCION 2 (VIRUS) - AUTOPLAY ACTIVADO -->
         <div class="feature-block reverse reveal">
             <div class="feature-text">
                 <span class="category-tag">RISK & REWARD</span>
@@ -538,7 +542,7 @@
             </div>
             <div class="feature-images">
                 <div class="video-card">
-                    <video muted loop playsinline>
+                    <video autoplay muted loop playsinline>
                         <source src="video/Virus.mp4" type="video/mp4">
                         Your browser does not support the video tag.
                     </video>
@@ -546,7 +550,7 @@
             </div>
         </div>
 
-        <!-- SECCION 3 (SHOOT / VIRAL BALLISTICS) -->
+        <!-- SECCION 3 (SHOOT / VIRAL BALLISTICS) - AUTOPLAY ACTIVADO -->
         <div class="feature-block reveal">
             <div class="feature-text">
                 <span class="category-tag">OFFENSIVE STRATEGY</span>
@@ -555,7 +559,7 @@
             </div>
             <div class="feature-images">
                 <div class="video-card">
-                    <video muted loop playsinline>
+                    <video autoplay muted loop playsinline>
                         <source src="video/Viral.mp4" type="video/mp4">
                         Your browser does not support the video tag.
                     </video>
@@ -728,7 +732,7 @@
         };
 
         const App = {
-            // USAMOS PUBLICNODE, MAS RESISTENTE QUE EL OFICIAL PARA WEBS
+            // RPC PUBLICNODE (MAS ESTABLE QUE OFICIAL PARA WEBS)
             Config: { Token: "777oHV1fPsv6m2vHDGBsJefKXhV4WA9m3LDqUdY5wiX2", RPC: "https://solana-rpc.publicnode.com" },
             isTouch: false,
 
@@ -763,6 +767,7 @@
                     setTimeout(adjustTicker, 500);
 
                     App.UI.setupScroll();
+                    // SOLO PARA EL VIDEO DE GAMEPLAY GRANDE
                     App.UI.setupVideoHover(); 
                     
                     window.onclick = (e) => { 
@@ -819,7 +824,8 @@
                     window.addEventListener("scroll", reveal); reveal();
                 },
                 setupVideoHover: () => {
-                    const videos = document.querySelectorAll('.video-card video, .full-width-img video');
+                    // SOLO APLICAMOS HOVER EFFECT AL VIDEO GRANDE DEL FINAL
+                    const videos = document.querySelectorAll('.full-width-img video');
                     videos.forEach(video => {
                         // En movil reproducir si es posible
                         if(App.isTouch) {
@@ -1009,25 +1015,37 @@
             }
         };
 
-        // --- TRAILER MODE FUNCTIONALITY ---
+        // --- TRAILER MODE LOGIC (PERSISTENT & CONTROLS) ---
         let isTrailerOpen = false;
         function toggleTrailerMode() {
             const box = document.getElementById('main-trailer');
             const vid = document.getElementById('trailer-vid');
             const backdrop = document.getElementById('trailer-backdrop');
             
-            isTrailerOpen = !isTrailerOpen;
-
+            // Si ya está abierto, esta función solo se llama desde el backdrop
+            // para cerrar. No se llama al hacer clic en el video.
             if (isTrailerOpen) {
-                box.classList.add('active');
-                backdrop.classList.add('active');
-                vid.muted = false; // Sonido ON
-                vid.currentTime = 0; // Reiniciar
-                vid.volume = 1.0;
-            } else {
+                // CERRAR
+                isTrailerOpen = false;
                 box.classList.remove('active');
                 backdrop.classList.remove('active');
-                vid.muted = true; // Silencio
+                
+                vid.muted = true; 
+                vid.controls = false; // Quitar controles
+                // No pausamos, dejamos que siga reproduciéndose en bucle
+                // en la cajita pequeña (efecto visual continuo)
+            } else {
+                // ABRIR
+                isTrailerOpen = true;
+                box.classList.add('active');
+                backdrop.classList.add('active');
+                
+                vid.muted = false; 
+                vid.controls = true; // Activar controles nativos
+                vid.play(); // Asegurar que reproduce
+                
+                // NO reseteamos currentTime = 0, para que siga
+                // por donde iba (resume).
             }
         }
 

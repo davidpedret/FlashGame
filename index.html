@@ -1060,33 +1060,47 @@ function toggleTrailerMode() {
     const box = document.getElementById('main-trailer');
     const vid = document.getElementById('trailer-vid');
     const backdrop = document.getElementById('trailer-backdrop');
+    
+    // Referencias para saber dónde devolver el video
+    const layout = document.querySelector('.main-layout');
+    const widget = document.querySelector('.side-widget');
 
     if (isTrailerOpen) {
-        // CERRAR
+        // --- CERRAR ---
         isTrailerOpen = false;
         document.body.classList.remove('trailer-open');
 
         box.classList.remove('active');
         backdrop.classList.remove('active');
 
-        // Silenciar y quitar controles, pero sigue reproduciendo
         vid.muted = true;
         vid.controls = false;
+        
+        // DEVOLVER A SU SITIO ORIGINAL (Insertar antes del widget lateral)
+        // Esperamos 300ms para que termine la transición de opacidad/tamaño si quieres, 
+        // pero hacerlo inmediato evita saltos visuales raros en el layout.
+        layout.insertBefore(box, widget);
+        
+        // Restaurar scroll si fuera necesario, aunque tu CSS maneja overflow.
 
     } else {
-        // ABRIR
+        // --- ABRIR ---
         isTrailerOpen = true;
         document.body.classList.add('trailer-open');
+        
+        // MOVER AL BODY (Fuera de #page-content para evitar el blur)
+        document.body.appendChild(box);
 
-        box.classList.add('active');
-        backdrop.classList.add('active');
+        // Pequeño timeout para asegurar que el navegador procese el movimiento del DOM
+        // antes de aplicar la clase .active que inicia la transición CSS
+        setTimeout(() => {
+            box.classList.add('active');
+            backdrop.classList.add('active');
+        }, 10);
 
-        // Activar sonido y controles sin reiniciar el video
         vid.muted = false;
         vid.controls = true;
-        
-        // Solo llamamos a play si por alguna razón estaba pausado
-        if (vid.paused) vid.play();
+        vid.play();
     }
 }
 

@@ -1504,7 +1504,31 @@
         enableEnemyFX = !document.getElementById('noEnemyFX').checked; enableEnemySnd = !document.getElementById('noEnemySnd').checked;
         const isChaosMode = document.getElementById('chaosModeToggle').checked; if (currentGameMode === 'arcade' && isChaosMode) { currentGameMode = 'skills'; }
         isGodMode = document.getElementById('godModeToggle').checked; isSpectating = false; 
-        if (currentGameMode === 'classic') { MAP_SIZE = WORLD_CONFIG.classic.size; els.actionBar.style.display = 'none'; } else { MAP_SIZE = WORLD_CONFIG.arcade.size; els.actionBar.style.display = 'flex'; playerSkills = isGodMode ? Array(10).fill().map((_,k)=>(k<8?{id:k+1,uses:999}:null)) : [null, null, null, null]; massMilestoneReached = false; nextSkillPickTime = 30; isPickingSkill = false; els.skillOverlay.style.display = 'none'; updateSkillsUI_Arcade(); }
+        if (currentGameMode === 'classic') { MAP_SIZE = WORLD_CONFIG.classic.size; els.actionBar.style.display = 'none'; }  else { 
+            MAP_SIZE = WORLD_CONFIG.arcade.size; 
+            els.actionBar.style.display = 'flex'; 
+            playerSkills = isGodMode ? Array(10).fill().map((_,k)=>(k<8?{id:k+1,uses:999}:null)) : [null, null, null, null]; 
+            massMilestoneReached = false; 
+            
+            // --- CORRECCIÓN: Sincronizar con el tiempo de sala ---
+            let rKey = currentGameMode + '_' + currentServer;
+            if (roomTimers[rKey]) {
+                // Calculamos cuánto tiempo lleva la sala activa
+                let elapsed = (GAME_DURATION_MS - (roomTimers[rKey] - Date.now())) / 1000;
+                if(elapsed < 0) elapsed = 0;
+                
+                // Programamos la skill para el SIGUIENTE múltiplo de 30
+                // Ejemplo: Si entras en el seg 70, la próxima es en el 90.
+                nextSkillPickTime = (Math.floor(elapsed / 30) + 1) * 30;
+            } else {
+                nextSkillPickTime = 30;
+            }
+            // -----------------------------------------------------
+
+            isPickingSkill = false; 
+            els.skillOverlay.style.display = 'none'; 
+            updateSkillsUI_Arcade(); 
+        }
         MAP_SIZE *= worldSettings.map;
         const skinUrlVal = document.getElementById('secretSkinInput').value; const useSkin = (document.getElementById('secretSkinPanel').style.display === 'block') && skinUrlVal.length > 5;
         currentKillStreak = 0; splitMilestones = { level1: false, level2: false }; botConfig.enabled = document.getElementById('botsToggle').checked; botConfig.count = parseInt(document.getElementById('botCountInput').value); botConfig.respawn = document.getElementById('botRespawnToggle').checked;

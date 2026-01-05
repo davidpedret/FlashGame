@@ -191,16 +191,24 @@
        }
 
 /* el blur se aplica en un pseudo-elemento, no en el contenedor */
-        .trailer-backdrop::before {
-       content: "";
-       position: absolute;
-       inset: 0;
+      /* ===== BLUR SOLO AL CONTENIDO (NO AL VIDEO) ===== */
+#page-content{
+  transition: filter 0.25s ease;
+  will-change: filter;
+}
 
-       backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+body.trailer-open #page-content{
+  filter: blur(10px);
+}
 
-    pointer-events: none;
-       }
+/* ===== BACKDROP SOLO OSCURECE ===== */
+.trailer-backdrop{
+  display:none;
+  position:fixed;
+  inset:0;
+  background: rgba(0,0,0,0.9);
+  z-index: 10001;
+}
 
        .trailer-backdrop.active { display: block; }
 
@@ -459,6 +467,7 @@
 <body>
 
     <div id="custom-cursor"></div>
+    <div id="page-content">
 
     <!-- NAVBAR -->
     <nav class="navbar" id="main-navbar">
@@ -676,7 +685,7 @@
         <p>&copy; 2025 PillWars.io | The Crypto Arena.</p>
         <p><a href="#">Twitter</a><a href="#">Telegram</a><a href="#">PlayBook</a></p>
     </footer>
-
+    </div>
     <!-- WALLET MODAL -->
     <div id="wallet-modal" class="modal-overlay">
         <div class="modal-box">
@@ -1034,37 +1043,36 @@
 
         // --- TRAILER MODE LOGIC (PERSISTENT & CONTROLS) ---
         let isTrailerOpen = false;
-        function toggleTrailerMode() {
-            const box = document.getElementById('main-trailer');
-            const vid = document.getElementById('trailer-vid');
-            const backdrop = document.getElementById('trailer-backdrop');
-            
-            // Si ya está abierto, esta función solo se llama desde el backdrop
-            // para cerrar. No se llama al hacer clic en el video.
-            if (isTrailerOpen) {
-                // CERRAR
-                isTrailerOpen = false;
-                box.classList.remove('active');
-                backdrop.classList.remove('active');
-                
-                vid.muted = true; 
-                vid.controls = false; // Quitar controles
-                // No pausamos, dejamos que siga reproduciéndose en bucle
-                // en la cajita pequeña (efecto visual continuo)
-            } else {
-                // ABRIR
-                isTrailerOpen = true;
-                box.classList.add('active');
-                backdrop.classList.add('active');
-                
-                vid.muted = false; 
-                vid.controls = true; // Activar controles nativos
-                vid.play(); // Asegurar que reproduce
-                
-                // NO reseteamos currentTime = 0, para que siga
-                // por donde iba (resume).
-            }
-        }
+function toggleTrailerMode() {
+    const box = document.getElementById('main-trailer');
+    const vid = document.getElementById('trailer-vid');
+    const backdrop = document.getElementById('trailer-backdrop');
+
+    if (isTrailerOpen) {
+        // CERRAR
+        isTrailerOpen = false;
+        document.body.classList.remove('trailer-open');   // ✅ AÑADIR
+
+        box.classList.remove('active');
+        backdrop.classList.remove('active');
+
+        vid.muted = true;
+        vid.controls = false;
+
+    } else {
+        // ABRIR
+        isTrailerOpen = true;
+        document.body.classList.add('trailer-open');      // ✅ AÑADIR
+
+        box.classList.add('active');
+        backdrop.classList.add('active');
+
+        vid.muted = false;
+        vid.controls = true;
+        vid.play();
+    }
+}
+
 
         App.UI.init();
         App.Market.updateTicker();

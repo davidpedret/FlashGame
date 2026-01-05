@@ -52,7 +52,7 @@
         /* ZONAS SEGURAS (CURSOR NATIVO) */
         .navbar, .navbar *, footer, footer *, .modal-overlay, .modal-box, .modal-box * { cursor: default !important; }
         .navbar a, .navbar button, .wallet-option, footer a, .modal-close { cursor: pointer !important; }
-        .btn-play, .ca-box, .skill-card, .video-card, .full-width-img { cursor: none; }
+        .btn-play, .ca-box, .skill-card, .video-card, .full-width-img, .trailer-box { cursor: none; }
 
         /* --- NAVBAR --- */
         .navbar {
@@ -70,7 +70,6 @@
         }
         .brand-name { font-family: 'Russo One'; font-size: 32px; color: #fff; text-transform: uppercase; letter-spacing: 2px; }
 
-        /* Contenedor de links y botón */
         .nav-links-container { 
             display: flex; gap: 30px; margin-left: 20px; align-items: center; 
         }
@@ -91,7 +90,6 @@
         .social-icon-link svg { width: 20px; height: 20px; fill: #888; transition: fill 0.2s; }
         .social-icon-link:hover svg { fill: #fff; }
 
-        /* DROPDOWN & WALLET UI */
         .dropdown { position: relative; display: flex; align-items: center; height: 100%; }
         .dropbtn { font-weight: 800; font-size: 14px; color: #fff; display: flex; align-items: center; gap: 8px; }
         .dropdown-content { display: none; position: absolute; top: 100%; right: 0; min-width: 180px; padding-top: 15px; }
@@ -133,7 +131,51 @@
         .content-container { padding: 100px 20px; display: flex; flex-direction: column; align-items: center; z-index: 5; position: relative; }
         
         .main-layout { display: flex; width: 100%; max-width: 1200px; gap: 30px; margin-bottom: 80px; flex-wrap: wrap; }
-        .trailer-box { flex: 2; min-width: 320px; background: #000; border: 1px solid #333; border-radius: 12px; aspect-ratio: 16/9; display: flex; justify-content: center; align-items: center; box-shadow: 0 0 50px #000; width: 100%; }
+
+        /* --- ESTILOS MODO CINE (TRAILER) --- */
+        .trailer-box { 
+            flex: 2; min-width: 320px; background: #000; border: 1px solid #333; border-radius: 12px; 
+            aspect-ratio: 16/9; display: flex; justify-content: center; align-items: center; 
+            box-shadow: 0 0 50px #000; width: 100%; 
+            position: relative; cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 10; overflow: hidden;
+        }
+
+        .trailer-box video {
+            width: 100%; height: 100%; object-fit: cover;
+            opacity: 0.6; transition: opacity 0.3s;
+        }
+
+        .trailer-hint {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            z-index: 20; pointer-events: none;
+            border: 1px solid rgba(255,255,255,0.3); padding: 10px 20px;
+            background: rgba(0,0,0,0.6); border-radius: 30px; backdrop-filter: blur(4px);
+            transition: opacity 0.3s;
+        }
+        .trailer-hint span { font-family: 'Russo One', sans-serif; color: #fff; font-size: 12px; letter-spacing: 1px; }
+
+        .trailer-box:hover video { opacity: 1; }
+        .trailer-box:hover { border-color: var(--primary); box-shadow: 0 0 30px rgba(0,255,136,0.2); }
+
+        /* TRAILER ACTIVE */
+        .trailer-box.active {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 80vw; max-width: 1000px; aspect-ratio: 16/9; height: auto;
+            z-index: 10002; border: 2px solid var(--primary);
+            box-shadow: 0 0 100px rgba(0,255,136,0.5);
+        }
+        .trailer-box.active video { opacity: 1; }
+        .trailer-box.active .trailer-hint { opacity: 0; }
+
+        .trailer-backdrop {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); z-index: 10001; backdrop-filter: blur(10px);
+        }
+        .trailer-backdrop.active { display: block; }
+        /* ------------------------------------- */
+
         .side-widget { flex: 1; min-width: 280px; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 12px; padding: 25px; display: flex; flex-direction: column; gap: 20px; backdrop-filter: blur(10px); width: 100%; }
         .widget-row { background: rgba(0,0,0,0.4); padding: 20px; border-radius: 8px; text-align: center; border-left: 4px solid var(--primary); }
         .widget-title { color: #666; font-size: 11px; letter-spacing: 2px; font-weight: 800; text-transform: uppercase; }
@@ -438,7 +480,18 @@
     <div class="content-container">
         
         <div class="main-layout">
-            <div class="trailer-box"><div style="width: 80px; height: 80px; background: rgba(255,255,255,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.2);"><div style="width: 0; height: 0; border-left: 20px solid white; border-top: 12px solid transparent; border-bottom: 12px solid transparent; margin-left: 5px;"></div></div></div>
+            
+            <!-- TRAILER BOX CON FUNCIONALIDAD CINE -->
+            <div class="trailer-box" id="main-trailer" onclick="toggleTrailerMode()">
+                <div class="trailer-hint">
+                    <span>🔊 TAP TO EXPAND & UNMUTE</span>
+                </div>
+                <video id="trailer-vid" autoplay muted loop playsinline>
+                    <source src="video/trailer.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+
             <div class="side-widget">
                 <div class="widget-row"><div class="widget-title">MARKET CAP</div><div class="widget-val" id="widget-mcap">Loading...</div></div>
                 <div class="widget-row"><div class="widget-title">VOLUME</div><div class="widget-val" id="widget-vol">Loading...</div></div>
@@ -607,6 +660,9 @@
         </div>
     </div>
 
+    <!-- FONDO DEL MODO CINE -->
+    <div id="trailer-backdrop" class="trailer-backdrop" onclick="toggleTrailerMode()"></div>
+
     <!-- TOOLTIP HTML -->
     <div id="skill-tooltip" class="skill-tooltip">
         <div class="tooltip-img-container">
@@ -663,7 +719,8 @@
         };
 
         const App = {
-            Config: { Token: "7GCihgDB8fe6KNjn2MYtkzZcRjQy3t9GHdC8uHYmW2hr", RPC: "api.mainnet-beta.solana.com" },
+            // USAMOS EL RPC PÚBLICO OFICIAL DE SOLANA (A VECES ES LENTO PERO ES GRATIS)
+            Config: { Token: "777oHV1fPsv6m2vHDGBsJefKXhV4WA9m3LDqUdY5wiX2", RPC: "https://api.mainnet-beta.solana.com" },
             isTouch: false,
 
             UI: {
@@ -722,8 +779,9 @@
                         const isNavbar = target.closest('.navbar');
                         const isFooter = target.closest('footer');
                         const isModal = target.closest('.modal-overlay');
+                        const isTrailer = target.closest('.trailer-box');
                         
-                        if (isNavbar || isFooter || isModal) {
+                        if (isNavbar || isFooter || isModal || isTrailer) {
                             DOM.cursor.style.opacity = '0'; 
                         } else {
                             DOM.cursor.style.opacity = '1'; 
@@ -867,12 +925,11 @@
             },
 
             Market: {
-                // --- PEGA ESTO SUSTITUYENDO LA FUNCION ANTERIOR ---
                 fetchBalance: async (wallet) => {
                     DOM.balanceDisplay.innerText = "Scanning...";
                     DOM.balanceDisplay.style.display = 'inline-block';
                     
-                    console.log("Conectando a RPC:", App.Config.RPC);
+                    console.log("Connecting to official Solana RPC...");
 
                     try {
                         const res = await fetch(App.Config.RPC, {
@@ -892,34 +949,27 @@
                         
                         const data = await res.json();
                         
-                        // Si hay error en la respuesta del RPC
                         if (data.error) {
-                            console.error("Error RPC:", data.error);
-                            DOM.balanceDisplay.innerText = "RPC Error";
+                            console.error("RPC Error:", data.error);
+                            DOM.balanceDisplay.innerText = "Net Err"; 
                             return;
                         }
 
-                        // Si la wallet no tiene cuentas de ese token (Saldo 0 real)
                         if (!data.result || !data.result.value || data.result.value.length === 0) {
-                            console.log("La wallet no tiene el token creado (Saldo 0)");
+                            console.log("Wallet has no tokens (Balance 0)");
                             DOM.balanceDisplay.innerText = "0 $PILL";
                             return;
                         }
 
-                        // Si tiene saldo, lo sacamos
                         const amount = parseFloat(data.result.value[0].account.data.parsed.info.tokenAmount.uiAmountString).toLocaleString('en-US', {maximumFractionDigits: 0});
-                        console.log("Saldo encontrado:", amount);
                         DOM.balanceDisplay.innerText = `${amount} $PILL`;
 
                     } catch (e) { 
-                        console.error("Error de conexión:", e);
+                        console.error("Connection Failed:", e);
                         DOM.balanceDisplay.innerText = "Net Err"; 
                     }
                 },
-                // --------------------------------------------------
-
                 updateTicker: async () => {
-                    // ... el resto de tu código updateTicker sigue aquí igual ...
                     try {
                         const res = await fetch(`https://api.dexscreener.com/latest/dex/tokens/${App.Config.Token}`);
                         const data = await res.json();
@@ -949,6 +999,28 @@
                 }
             }
         };
+
+        // --- TRAILER MODE FUNCTIONALITY ---
+        let isTrailerOpen = false;
+        function toggleTrailerMode() {
+            const box = document.getElementById('main-trailer');
+            const vid = document.getElementById('trailer-vid');
+            const backdrop = document.getElementById('trailer-backdrop');
+            
+            isTrailerOpen = !isTrailerOpen;
+
+            if (isTrailerOpen) {
+                box.classList.add('active');
+                backdrop.classList.add('active');
+                vid.muted = false; // Sonido ON
+                vid.currentTime = 0; // Reiniciar
+                vid.volume = 1.0;
+            } else {
+                box.classList.remove('active');
+                backdrop.classList.remove('active');
+                vid.muted = true; // Silencio
+            }
+        }
 
         App.UI.init();
         App.Market.updateTicker();

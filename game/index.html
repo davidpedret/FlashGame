@@ -1190,15 +1190,16 @@
                     let avgX = 0, avgY = 0, count = 0; if (!this.isBot && player.cells.length > 0) { player.cells.forEach(c => { avgX += c.x; avgY += c.y; count++; }); if(count > 0) { avgX /= count; avgY /= count; } let dirX = 0, dirY = 0; if (keys.a) dirX -= 1; if (keys.d) dirX += 1; if (keys.w) dirY -= 1; if (keys.s) dirY += 1; let dist = 1000; let targetX = avgX + (dirX * dist); let targetY = avgY + (dirY * dist); dx = targetX - this.x; dy = targetY - this.y; }
                 } 
             } else if (this.isBot) { this.botAI(delta); dx = this.targetX - this.x; dy = this.targetY - this.y; }
-            let// CORRECCIÓN VIBRACIÓN BOTS
+            
+            // CORRECCIÓN VIBRACIÓN BOTS
             let dist = Math.sqrt(dx*dx + dy*dy); 
-            // Aumentamos el margen de 0.001 a 5. Si está a menos de 5px, se para.
+            
+            // Si está a menos de 5px, se para para evitar vibración.
             if (dist > 5) { 
                 this.vx = (dx / dist) * speedMult; 
                 this.vy = (dy / dist) * speedMult; 
 
-                // Suavizado extra: si está muy cerca del objetivo (menos del radio), reducir velocidad
-                // Esto hace que "aparquen" suavemente en lugar de frenar en seco o vibrar
+                // Suavizado extra cuando se acerca al objetivo
                 if (dist < 40) {
                     let brake = dist / 40;
                     this.vx *= brake;
@@ -1207,7 +1208,8 @@
             } else { 
                 this.vx = 0; 
                 this.vy = 0; 
-            } dist = Math.sqrt(dx*dx + dy*dy); if (dist > 0.001) { this.vx = (dx / dist) * speedMult; this.vy = (dy / dist) * speedMult; } else { this.vx = 0; this.vy = 0; }
+            }
+            
             let maxAllowed = speedMult * 1.2, currentSpeed = Math.sqrt(this.vx*this.vx + this.vy*this.vy); if (currentSpeed > maxAllowed) { let ratio = maxAllowed / currentSpeed; this.vx *= ratio; this.vy *= ratio; }
             this.x += (this.vx + this.boostX) * timeScale; this.y += (this.vy + this.boostY) * timeScale;
             let margin = (this.r + (this.r * PILL_RATIO)) * 0.7071, limit = MAP_SIZE - margin; this.x = Math.max(Math.min(this.x, limit), -limit); this.y = Math.max(Math.min(this.y, limit), -limit);

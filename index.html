@@ -147,26 +147,35 @@
             opacity: 0.6; transition: opacity 0.3s;
         }
 
+        /* TEXTO ABAJO DEL TODO */
         .trailer-hint {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            position: absolute; 
+            bottom: 20px; /* PEGADO ABAJO */
+            top: auto;
+            left: 50%; transform: translateX(-50%);
             z-index: 20; pointer-events: none;
             border: 1px solid rgba(255,255,255,0.3); padding: 10px 20px;
             background: rgba(0,0,0,0.6); border-radius: 30px; backdrop-filter: blur(4px);
             transition: opacity 0.3s;
+            white-space: nowrap;
         }
         .trailer-hint span { font-family: 'Russo One', sans-serif; color: #fff; font-size: 12px; letter-spacing: 1px; }
 
         .trailer-box:hover video { opacity: 1; }
         .trailer-box:hover { border-color: var(--primary); box-shadow: 0 0 30px rgba(0,255,136,0.2); }
 
-        /* TRAILER ACTIVE */
+        /* TRAILER ACTIVE (SOLUCION OSCURIDAD) */
         .trailer-box.active {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
             width: 80vw; max-width: 1000px; aspect-ratio: 16/9; height: auto;
-            z-index: 10002; border: 2px solid var(--primary);
+            z-index: 10005 !important; /* MUCHO MAS ALTO QUE EL BACKDROP */
+            border: 2px solid var(--primary);
             box-shadow: 0 0 100px rgba(0,255,136,0.5);
+            background: #000;
         }
-        .trailer-box.active video { opacity: 1; }
+        .trailer-box.active video { 
+            opacity: 1 !important; /* FORZAR OPACIDAD AL 100% */
+        }
         .trailer-box.active .trailer-hint { opacity: 0; }
 
         .trailer-backdrop {
@@ -481,7 +490,7 @@
         
         <div class="main-layout">
             
-            <!-- TRAILER BOX CON FUNCIONALIDAD CINE -->
+            <!-- TRAILER BOX CON FUNCIONALIDAD CINE (CORREGIDO "Trailer.mp4") -->
             <div class="trailer-box" id="main-trailer" onclick="toggleTrailerMode()">
                 <div class="trailer-hint">
                     <span>🔊 TAP TO EXPAND & UNMUTE</span>
@@ -719,8 +728,8 @@
         };
 
         const App = {
-            // USAMOS EL RPC PÚBLICO OFICIAL DE SOLANA (A VECES ES LENTO PERO ES GRATIS)
-            Config: { Token: "777oHV1fPsv6m2vHDGBsJefKXhV4WA9m3LDqUdY5wiX2", RPC: "https://solana-mainnet.rpc.extrnode.com" },
+            // USAMOS PUBLICNODE, MAS RESISTENTE QUE EL OFICIAL PARA WEBS
+            Config: { Token: "777oHV1fPsv6m2vHDGBsJefKXhV4WA9m3LDqUdY5wiX2", RPC: "https://solana-rpc.publicnode.com" },
             isTouch: false,
 
             UI: {
@@ -929,7 +938,7 @@
                     DOM.balanceDisplay.innerText = "Scanning...";
                     DOM.balanceDisplay.style.display = 'inline-block';
                     
-                    console.log("Connecting to official Solana RPC...");
+                    console.log("Connecting to RPC:", App.Config.RPC);
 
                     try {
                         const res = await fetch(App.Config.RPC, {
